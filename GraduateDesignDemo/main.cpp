@@ -84,7 +84,9 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		float timeValue = glfwGetTime();
-		float move = ((sin(timeValue)) +1.0f)/2.0f;
+		//cout << timeValue << endl;
+		float move = ((sin(timeValue/100.0f)) +1.0f)/2.0f;
+		cout << move << endl;
 		shader.setFloat("move", move);
 
 
