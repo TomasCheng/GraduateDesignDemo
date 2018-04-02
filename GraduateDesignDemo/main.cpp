@@ -91,6 +91,8 @@ int main()
 
 		//测试提交
 
+		//api熟悉阶段
+		
 		
 		//交换前后台帧缓存
 		glfwSwapBuffers(window);

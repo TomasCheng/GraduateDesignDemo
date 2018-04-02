@@ -40,5 +40,6 @@
     <None Include="Shader.fs">
       <Filter>源文件\ShaderSource</Filter>
     </None>
+    <None Include="..\README.md" />
   </ItemGroup>
 </Project>

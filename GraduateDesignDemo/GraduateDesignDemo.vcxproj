@@ -129,6 +129,7 @@
     <ClInclude Include="Shader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\README.md" />
     <None Include="Shader.fs" />
     <None Include="Shader.vs" />
   </ItemGroup>
