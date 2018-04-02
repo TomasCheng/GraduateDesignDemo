@@ -13,10 +13,10 @@ int main()
 {
 	cout << "hello,world"<<endl;
 	glfwInit();
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	
 	//创建窗口
@@ -66,7 +66,7 @@ int main()
 	// 1. 设置顶点属性指针
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-
+	
 
 
 
@@ -83,13 +83,15 @@ int main()
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		float timeValue = glfwGetTime();
-		//cout << timeValue << endl;
-		float move = ((sin(timeValue/100.0f)) +1.0f)/2.0f;
-		cout << move << endl;
-		shader.setFloat("move", move);
+//		float timeValue = glfwGetTime();
+//		cout << timeValue << endl;
+//		float move = ((sin(timeValue/100.0f)) +1.0f)/2.0f;
+//		cout << move << endl;
+//		shader.setFloat("move", move);
 
+		//测试提交
 
+		
 		//交换前后台帧缓存
 		glfwSwapBuffers(window);
 		//抛出事件
