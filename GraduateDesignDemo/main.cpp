@@ -71,8 +71,8 @@ int main()
 
 
 	//创建Shader
-	Shader shader = Shader("Shader.vs", "Shader.fs");
-	shader.use();
+	Shader *shader = new Shader("Shader.vs", "Shader.fs");
+	shader->use();
 
 
 	//主循环，判断窗口是否要关闭
@@ -90,6 +90,8 @@ int main()
 //		shader.setFloat("move", move);
 
 		//测试提交
+
+
 
 		//api熟悉阶段
 		
