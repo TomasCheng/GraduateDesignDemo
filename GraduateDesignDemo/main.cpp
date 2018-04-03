@@ -43,51 +43,52 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//准备数据
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f,
-		0.0f, 0.0f, 0.0f,
+	float vertices[][12] = {
+		{
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			0.0f, 0.5f, 0.0f,
+			0.0f, 0.0f, 0.0f
+		},
+		{
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			0.0f, 0.5f, 0.0f,
+			-0.5f, 0.0f, 0.0f,
+		},
+		{
+			-0.5f, -0.5f, 0.0f,
+			0.5f, -0.5f, 0.0f,
+			0.0f, 0.5f, 0.0f,
+			0.5f, 0.0f, 0.0f,
+		}
 	};
-
-	float vertices2[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f,
-		-0.5f, 0.0f, 0.0f,
-	};
-	unsigned int VAO1[2];
-	glGenVertexArrays(2, VAO1);
-
-	glBindVertexArray(VAO1[0]);
+	GLuint VAO[3];
+	glGenVertexArrays(3, VAO);
 
 
-	GLuint VBO;
+	int m = sizeof(vertices[0]);
+
+	GLuint VBO[3];
 	//产生顶点缓冲对象
-	glGenBuffers(1, &VBO);
+	glGenBuffers(3, VBO);
 	//绑定顶点缓冲对象，后面所有关于缓冲对象的操作都是作用在vbo指定的顶点数组对象上
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//传数据
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	//打开顶点属性，0是位置
-	glEnableVertexAttribArray(0);
-	//指定顶点缓冲中数据格式
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	for (int i = 0; i < 3; ++i)
+	{
+		glBindVertexArray(VAO[i]);
 
-	glBindVertexArray(VAO1[1]);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
 
+		
 
-	GLuint VBO2;
-	//产生顶点缓冲对象
-	glGenBuffers(1, &VBO2);
-	//绑定顶点缓冲对象，后面所有关于缓冲对象的操作都是作用在vbo指定的顶点数组对象上
-	glBindBuffer(GL_ARRAY_BUFFER, VBO2);
-	//传数据
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
-	//打开顶点属性，0是位置
-	glEnableVertexAttribArray(0);
-	//指定顶点缓冲中数据格式
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+		//传数据
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[i]), vertices[i], GL_DYNAMIC_DRAW);
+		//打开顶点属性，0是位置
+		glEnableVertexAttribArray(0);
+		//指定顶点缓冲中数据格式
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+	}
+
 
 	//
 	//	// 0. 复制顶点数组到缓冲中供OpenGL使用
@@ -97,7 +98,6 @@ int main()
 	//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	//	glEnableVertexAttribArray(0);
 
-	glBindVertexArray(VAO1[0]);
 
 	//创建Shader
 	Shader* shader = new Shader("Shader.vs", "Shader.fs");
@@ -112,28 +112,16 @@ int main()
 
 		glDrawArrays(GL_LINES, 0, 4);
 
-		//		float timeValue = glfwGetTime();
-		//		cout << timeValue << endl;
-		//		float move = ((sin(timeValue/100.0f)) +1.0f)/2.0f;
-		//		cout << move << endl;
-		//		shader.setFloat("move", move);
-
 		//测试提交
-		
 
-		int time = glfwGetTime() ;
+		int time = glfwGetTime();
 
-		cout << time << endl;
+//		cout << time%10 /10.0f << endl;
 
-		if(time %2 == 0)
-		{
-			glBindVertexArray(VAO1[0]);
 
-		}else
-		{
-			glBindVertexArray(VAO1[1]);
+//		shader->setFloat("move", time % 10 / 10.0f);
 
-		}
+		glBindVertexArray(VAO[time % 3]);
 
 
 		//api熟悉阶段
