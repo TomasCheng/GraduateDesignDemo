@@ -16,6 +16,9 @@
     <Filter Include="源文件\ShaderSource">
       <UniqueIdentifier>{39bae6ff-ab03-45ae-834d-ac40023848db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="源文件\image">
+      <UniqueIdentifier>{1201602b-b6fa-434f-a366-7ab4c89b423a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c">
@@ -27,10 +30,16 @@
     <ClCompile Include="Shader.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="stb_image_define.cpp">
+      <Filter>源文件\image</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>源文件\image</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -41,5 +50,10 @@
       <Filter>源文件\ShaderSource</Filter>
     </None>
     <None Include="..\README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container.jpg">
+      <Filter>源文件\image</Filter>
+    </Image>
   </ItemGroup>
 </Project>

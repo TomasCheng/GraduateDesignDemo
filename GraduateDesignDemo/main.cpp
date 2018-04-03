@@ -2,6 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Shader.h"
+#include "stb_image.h"
 using namespace std;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -42,13 +43,39 @@ int main()
 	//绑定当窗口大小发生变化时的回调函数
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
+	//加载纹理图片
+	int width, height, nrChannels;
+	unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+
+	//生成纹理
+	unsigned int texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// 为当前绑定的纹理对象设置环绕、过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//用加载好的图片数据创建纹理
+	if(data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	//生成好了，释放刚刚从文件中加载出来的图像数据
+	stbi_image_free(data);
+
 	//准备数据
-	float vertices[][24] = {
+	float vertices[][32] = {
 		{
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-			0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f,
+			//位置              颜色               纹理坐标
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,0.0f,0.0f,
+			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,1.0f,0.0f,
+			0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,1.0f,1.0f,
+			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f,0.0f,1.0f
 		},
 		{
 			-0.5f, -0.5f, 0.0f,
@@ -94,15 +121,20 @@ int main()
 
 		//传数据
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[i]), vertices[i], GL_STATIC_DRAW);
-		//打开顶点属性，0是位置
+		//打开顶点位置属性，0是位置
 		glEnableVertexAttribArray(0);
 		//指定顶点缓冲中数据格式
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 
-		//打开顶点属性，1是颜色
+		//打开顶点颜色属性，1是颜色
 		glEnableVertexAttribArray(1);
 		//指定顶点缓冲中数据格式
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+		//打开顶点纹理坐标属性，2是纹理坐标
+		glEnableVertexAttribArray(2);
+		//指定顶点缓冲中数据格式
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	}
 
 
@@ -123,7 +155,7 @@ int main()
 	//主循环，判断窗口是否要关闭
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		//		glDrawArrays(GL_LINES, 0, 4);
