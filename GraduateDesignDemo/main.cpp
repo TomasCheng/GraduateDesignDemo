@@ -43,12 +43,12 @@ int main()
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//准备数据
-	float vertices[][12] = {
+	float vertices[][24] = {
 		{
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f,
-			-0.5f, 0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+			0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
+			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f,
 		},
 		{
 			-0.5f, -0.5f, 0.0f,
@@ -65,8 +65,8 @@ int main()
 	};
 	//定义索引数据
 	unsigned int indeces[] = {
-		0,1,2,
-		0,2,3,
+		0, 1, 2,
+		0, 2, 3,
 	};
 
 	GLuint EBO;
@@ -79,7 +79,6 @@ int main()
 	glGenVertexArrays(3, VAO);
 
 
-	
 	GLuint VBO[3];
 	//产生顶点缓冲对象
 	glGenBuffers(3, VBO);
@@ -92,14 +91,18 @@ int main()
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
-		
 
 		//传数据
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[i]), vertices[i], GL_STATIC_DRAW);
 		//打开顶点属性，0是位置
 		glEnableVertexAttribArray(0);
 		//指定顶点缓冲中数据格式
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+
+		//打开顶点属性，1是颜色
+		glEnableVertexAttribArray(1);
+		//指定顶点缓冲中数据格式
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	}
 
 
@@ -123,7 +126,7 @@ int main()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-//		glDrawArrays(GL_LINES, 0, 4);
+		//		glDrawArrays(GL_LINES, 0, 4);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
@@ -131,20 +134,22 @@ int main()
 
 		int time = glfwGetTime();
 
-//		cout << time%10 /10.0f << endl;
+		//		cout << time%10 /10.0f << endl;
 
-		if(time%6<3)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
+//		if (time % 6 < 3)
+//		{
+//			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//		}
+//		else
+//		{
+//			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//		}
 
 
-//		shader->setFloat("move", time % 10 / 10.0f);
+		//		shader->setFloat("move", time % 10 / 10.0f);
 
-		glBindVertexArray(VAO[time % 3]);
+//		glBindVertexArray(VAO[time % 3]);
+		glBindVertexArray(VAO[0]);
 
 
 		//api熟悉阶段
