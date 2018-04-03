@@ -47,28 +47,39 @@ int main()
 		{
 			-0.5f, -0.5f, 0.0f,
 			0.5f, -0.5f, 0.0f,
-			0.0f, 0.5f, 0.0f,
-			0.0f, 0.0f, 0.0f
+			0.5f, 0.5f, 0.0f,
+			-0.5f, 0.5f, 0.0f
 		},
 		{
 			-0.5f, -0.5f, 0.0f,
 			0.5f, -0.5f, 0.0f,
-			0.0f, 0.5f, 0.0f,
-			-0.5f, 0.0f, 0.0f,
+			0.5f, 0.5f, 0.0f,
+			-0.2f, 0.5f, 0.0f
 		},
 		{
 			-0.5f, -0.5f, 0.0f,
 			0.5f, -0.5f, 0.0f,
-			0.0f, 0.5f, 0.0f,
-			0.5f, 0.0f, 0.0f,
+			0.5f, 0.5f, 0.0f,
+			0.2f, 0.5f, 0.0f
 		}
 	};
+	//定义索引数据
+	unsigned int indeces[] = {
+		0,1,2,
+		0,2,3,
+	};
+
+	GLuint EBO;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indeces), indeces, GL_STATIC_DRAW);
+
+
 	GLuint VAO[3];
 	glGenVertexArrays(3, VAO);
 
 
-	int m = sizeof(vertices[0]);
-
+	
 	GLuint VBO[3];
 	//产生顶点缓冲对象
 	glGenBuffers(3, VBO);
@@ -79,10 +90,12 @@ int main()
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO[i]);
 
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
 		
 
 		//传数据
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[i]), vertices[i], GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[i]), vertices[i], GL_STATIC_DRAW);
 		//打开顶点属性，0是位置
 		glEnableVertexAttribArray(0);
 		//指定顶点缓冲中数据格式
@@ -107,16 +120,26 @@ int main()
 	//主循环，判断窗口是否要关闭
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.0f, 0.1f, 0.0f, 1.0f);
+		glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_LINES, 0, 4);
+//		glDrawArrays(GL_LINES, 0, 4);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		//测试提交
 
 		int time = glfwGetTime();
 
 //		cout << time%10 /10.0f << endl;
+
+		if(time%6<3)
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		}else
+		{
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		}
 
 
 //		shader->setFloat("move", time % 10 / 10.0f);
