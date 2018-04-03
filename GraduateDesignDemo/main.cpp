@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "Shader.h"
-using namespace std;
+#include <complex>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -11,7 +11,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 int main()
 {
-	cout << "hello,world" << endl;
+	std::cout << "hello,world" << std::endl;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -117,6 +117,10 @@ int main()
 	shader->use();
 
 
+	int nrAttributes;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+	std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
+
 	//Ö÷Ñ­»·£¬ÅÐ¶Ï´°¿ÚÊÇ·ñÒª¹Ø±Õ
 	while (!glfwWindowShouldClose(window))
 	{
@@ -131,20 +135,23 @@ int main()
 
 		int time = glfwGetTime();
 
+		shader->setFloat("green", std::sin(time) / 2.0f + 0.5f);
+
 //		cout << time%10 /10.0f << endl;
 
-		if(time%6<3)
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		}else
-		{
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		}
+//		if(time%6<3)
+//		{
+//			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//		}else
+//		{
+//			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//		}
 
 
 //		shader->setFloat("move", time % 10 / 10.0f);
 
-		glBindVertexArray(VAO[time % 3]);
+//		glBindVertexArray(VAO[time % 3]);
+		glBindVertexArray(VAO[0]);
 
 
 		//apiÊìÏ¤½×¶Î
@@ -158,6 +165,6 @@ int main()
 	//glfwÍ£Ö¹
 	glfwTerminate();
 
-	cout << "close the window" << endl;
+	std::cout << "close the window" << std::endl;
 	return 0;
 }
