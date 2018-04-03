@@ -45,7 +45,8 @@ int main()
 
 	//加载纹理图片
 	int width, height, nrChannels;
-	unsigned char *data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
 
 	//生成纹理
 	unsigned int texture;
@@ -57,11 +58,12 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//用加载好的图片数据创建纹理
-	if(data)
+	if (data)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
-	}else
+	}
+	else
 	{
 		std::cout << "Failed to load texture" << std::endl;
 	}
@@ -72,10 +74,10 @@ int main()
 	float vertices[][32] = {
 		{
 			//位置              颜色               纹理坐标
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,0.0f,0.0f,
-			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,1.0f,0.0f,
-			0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f,1.0f,1.0f,
-			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f,0.0f,1.0f
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+			0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+			-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f
 		},
 		{
 			-0.5f, -0.5f, 0.0f,
@@ -168,19 +170,19 @@ int main()
 
 		//		cout << time%10 /10.0f << endl;
 
-//		if (time % 6 < 3)
-//		{
-//			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//		}
-//		else
-//		{
-//			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-//		}
+		//		if (time % 6 < 3)
+		//		{
+		//			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//		}
+		//		else
+		//		{
+		//			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		//		}
 
 
 		//		shader->setFloat("move", time % 10 / 10.0f);
 
-//		glBindVertexArray(VAO[time % 3]);
+		//		glBindVertexArray(VAO[time % 3]);
 		glBindVertexArray(VAO[0]);
 
 
