@@ -10,9 +10,27 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	std::cout << "key:" << key << std::endl;
+
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+	{
+		//按下UP键增加混合比例
+	}
+	//		key_UD = key_UD + 0.1f;
+	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+	{
+		//按下DOWN减小混合比例
+	}
+	//		key_UD = key_UD - 0.1f;
+}
+
 int main()
 {
-	cout << "hello,world" << endl;
+	std::cout << "hello,world" << endl;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -42,38 +60,59 @@ int main()
 
 	//绑定当窗口大小发生变化时的回调函数
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	//绑定按键回调
+	glfwSetKeyCallback(window, key_callback);
 
 	//加载纹理图片
 	int width, height, nrChannels;
+	int width2, height2, nrChannels2;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char* data = stbi_load("container.jpg", &width, &height, &nrChannels, 0);
+
+	unsigned char* data = stbi_load("wall.jpg", &width, &height, &nrChannels, 0);
+
+	unsigned char* data2 = stbi_load("container.jpg", &width2, &height2, &nrChannels2, 0);
+
 
 	//生成纹理
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	GLuint texture[2];
+	glGenTextures(2, texture);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture[0]);
 	// 为当前绑定的纹理对象设置环绕、过滤方式
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//用加载好的图片数据创建纹理
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load texture" << std::endl;
-	}
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, texture[1]);
+	// 为当前绑定的纹理对象设置环绕、过滤方式
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width2, height2, 0, GL_RGB, GL_UNSIGNED_BYTE, data2);
+
+	//	//用加载好的图片数据创建纹理
+	//	if (data && data2)
+	//	{
+	//		glGenerateMipmap(GL_TEXTURE_2D);
+	//	}
+	//	else
+	//	{
+	//		std::cout << "Failed to load texture" << std::endl;
+	//	}
 	//生成好了，释放刚刚从文件中加载出来的图像数据
 	stbi_image_free(data);
+	stbi_image_free(data2);
 
 	//准备数据
 	float vertices[][32] = {
 		{
-			//位置              颜色               纹理坐标
+			//位置                  颜色               纹理坐标
 			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 			0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
 			0.5f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
@@ -151,7 +190,20 @@ int main()
 
 	//创建Shader
 	Shader* shader = new Shader("Shader.vs", "Shader.fs");
+
 	shader->use();
+
+//	glActiveTexture(GL_TEXTURE0);
+//	glBindTexture(GL_TEXTURE_2D, texture[0]);
+	shader->setInt("ourTexture1", 0);
+
+
+//	glActiveTexture(GL_TEXTURE1);
+//	glBindTexture(GL_TEXTURE_2D, texture[1]);
+
+
+
+	shader->setInt("ourTexture2", 1);
 
 
 	//主循环，判断窗口是否要关闭
@@ -197,6 +249,6 @@ int main()
 	//glfw停止
 	glfwTerminate();
 
-	cout << "close the window" << endl;
+	std::cout << "close the window" << endl;
 	return 0;
 }
