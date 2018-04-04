@@ -10,19 +10,28 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
+float x;
+Shader* shader;
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-	std::cout << "key:" << key << std::endl;
+//	std::cout << "key:" << key << std::endl;
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
-	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+	if (key == GLFW_KEY_UP && action == GLFW_REPEAT)
 	{
+		x += 0.01f;
+		shader->setFloat("x", x);
+		std::cout << "x:" << x << std::endl;
 		//按下UP键增加混合比例
 	}
 	//		key_UD = key_UD + 0.1f;
-	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+	if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT)
 	{
+		x -= 0.01f;
+		shader->setFloat("x", x);
+		std::cout << "x:" << x << std::endl;
+
 		//按下DOWN减小混合比例
 	}
 	//		key_UD = key_UD - 0.1f;
@@ -189,19 +198,11 @@ int main()
 
 
 	//创建Shader
-	Shader* shader = new Shader("Shader.vs", "Shader.fs");
+	shader = new Shader("Shader.vs", "Shader.fs");
 
 	shader->use();
 
-//	glActiveTexture(GL_TEXTURE0);
-//	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	shader->setInt("ourTexture1", 0);
-
-
-//	glActiveTexture(GL_TEXTURE1);
-//	glBindTexture(GL_TEXTURE_2D, texture[1]);
-
-
+//	shader->setInt("ourTexture1", 0);
 
 	shader->setInt("ourTexture2", 1);
 
