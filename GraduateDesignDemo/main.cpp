@@ -3,7 +3,11 @@
 #include <GLFW/glfw3.h>
 #include "Shader.h"
 #include "stb_image.h"
-using namespace std;
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/fwd.hpp>
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -12,25 +16,35 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 float x;
 Shader* shader;
+glm::mat4 trans(1.0f);
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
 //	std::cout << "key:" << key << std::endl;
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
-	if (key == GLFW_KEY_UP && action == GLFW_REPEAT)
+	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
 	{
-		x += 0.01f;
-		shader->setFloat("x", x);
-		std::cout << "x:" << x << std::endl;
-		//按下UP键增加混合比例
+//		x += 0.01f;
+//		shader->setFloat("x", x);
+//		std::cout << "x:" << x << std::endl;
+//		//按下UP键增加混合比例
+//		x += 1.0f;
+		trans = glm::rotate(trans, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+		shader->setMat4("transform", trans);
+
 	}
 	//		key_UD = key_UD + 0.1f;
 	if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT)
 	{
-		x -= 0.01f;
-		shader->setFloat("x", x);
-		std::cout << "x:" << x << std::endl;
+//		x -= 0.01f;
+//		shader->setFloat("x", x);
+//		std::cout << "x:" << x << std::endl;
+
+		trans = glm::rotate(trans, glm::radians(-10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+		shader->setMat4("transform", trans);
 
 		//按下DOWN减小混合比例
 	}
@@ -39,7 +53,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int main()
 {
-	std::cout << "hello,world" << endl;
+	std::cout << "hello,world" << std::endl;
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -47,8 +61,19 @@ int main()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 
+	//test
+	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+//	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+//	trans = glm::rotate(trans, 90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+//	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	vec = trans * vec;
+
+	std::cout << vec.x << std::endl <<vec.y << std::endl <<vec.z << std::endl <<vec.w << std::endl;
+
+
 	//创建窗口
-	GLFWwindow* window = glfwCreateWindow(800, 600, "LearnOpenGL", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 800, "LearnOpenGL", NULL, NULL);
 	if (window == NULL)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -65,7 +90,7 @@ int main()
 		return -1;
 	}
 
-	glViewport(0, 0, 800, 600);
+	glViewport(0, 0, 800, 800);
 
 	//绑定当窗口大小发生变化时的回调函数
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -206,6 +231,7 @@ int main()
 
 	shader->setInt("ourTexture2", 1);
 
+	shader->setMat4("transform", trans);
 
 	//主循环，判断窗口是否要关闭
 	while (!glfwWindowShouldClose(window))
@@ -238,6 +264,9 @@ int main()
 		//		glBindVertexArray(VAO[time % 3]);
 		glBindVertexArray(VAO[0]);
 
+		trans = glm::rotate(trans, glm::sin(time/10.0f)/10.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+		shader->setMat4("transform", trans);
 
 		//api熟悉阶段
 
@@ -250,6 +279,6 @@ int main()
 	//glfw停止
 	glfwTerminate();
 
-	std::cout << "close the window" << endl;
+	std::cout << "close the window" << std::endl;
 	return 0;
 }
