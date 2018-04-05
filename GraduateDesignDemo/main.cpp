@@ -20,28 +20,27 @@ glm::mat4 trans(1.0f);
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-//	std::cout << "key:" << key << std::endl;
+	//	std::cout << "key:" << key << std::endl;
 
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
 	{
-//		x += 0.01f;
-//		shader->setFloat("x", x);
-//		std::cout << "x:" << x << std::endl;
-//		//按下UP键增加混合比例
-//		x += 1.0f;
+		//		x += 0.01f;
+		//		shader->setFloat("x", x);
+		//		std::cout << "x:" << x << std::endl;
+		//		//按下UP键增加混合比例
+		//		x += 1.0f;
 		trans = glm::rotate(trans, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
 		shader->setMat4("transform", trans);
-
 	}
 	//		key_UD = key_UD + 0.1f;
 	if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT)
 	{
-//		x -= 0.01f;
-//		shader->setFloat("x", x);
-//		std::cout << "x:" << x << std::endl;
+		//		x -= 0.01f;
+		//		shader->setFloat("x", x);
+		//		std::cout << "x:" << x << std::endl;
 
 		trans = glm::rotate(trans, glm::radians(-10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 		shader->setMat4("transform", trans);
@@ -63,13 +62,13 @@ int main()
 
 	//test
 	glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-//	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
+	//	trans = glm::translate(trans, glm::vec3(1.0f, 1.0f, 0.0f));
 	trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-//	trans = glm::rotate(trans, 90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
-//	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
+	//	trans = glm::rotate(trans, 90.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+	//	trans = glm::scale(trans, glm::vec3(0.5f, 0.5f, 0.5f));
 	vec = trans * vec;
 
-	std::cout << vec.x << std::endl <<vec.y << std::endl <<vec.z << std::endl <<vec.w << std::endl;
+	std::cout << vec.x << std::endl << vec.y << std::endl << vec.z << std::endl << vec.w << std::endl;
 
 
 	//创建窗口
@@ -165,6 +164,72 @@ int main()
 			0.2f, 0.5f, 0.0f
 		}
 	};
+	//正方体数据,全顶点，非索引
+	GLfloat cubeVertices[] = {
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+
+		-0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+
+		-0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+
+		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f
+	};
+
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
+	GLuint cubeVAO;
+	glGenVertexArrays(1, &cubeVAO);
+	glBindVertexArray(cubeVAO);
+	GLuint cubeVBO;
+	glGenBuffers(1, &cubeVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
+
 	//定义索引数据
 	unsigned int indeces[] = {
 		0, 1, 2,
@@ -175,6 +240,20 @@ int main()
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indeces), indeces, GL_STATIC_DRAW);
+	//打开顶点位置属性，0是位置
+	glEnableVertexAttribArray(0);
+	//指定顶点缓冲中数据格式
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+
+	//打开顶点颜色属性，1是颜色
+	glEnableVertexAttribArray(1);
+	//指定顶点缓冲中数据格式
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+
+	//打开顶点纹理坐标属性，2是纹理坐标
+	glEnableVertexAttribArray(2);
+	//指定顶点缓冲中数据格式
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 
 
 	GLuint VAO[3];
@@ -227,27 +306,65 @@ int main()
 
 	shader->use();
 
-//	shader->setInt("ourTexture1", 0);
+	//	shader->setInt("ourTexture1", 0);
 
 	shader->setInt("ourTexture2", 1);
 
-	shader->setMat4("transform", trans);
+
+	//MVP矩阵的构造
+//	glm::mat4 modle(1.0f);
+//	modle = glm::rotate(modle, glm::radians(-50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 view(1.0f);
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+	glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
+//
+//	trans = proj * view * modle;
+
+	shader->setMat4("view", view);
+	shader->setMat4("proj", proj);
+
+	glEnable(GL_DEPTH_TEST);
 
 	//主循环，判断窗口是否要关闭
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.2f, 0.5f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		//		glDrawArrays(GL_LINES, 0, 4);
-
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
-		//测试提交
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		int time = glfwGetTime();
 
+		for (int i = 0; i < 10; ++i)
+		{
+			glm::mat4 modle(1.0f);
+			modle = glm::translate(modle, cubePositions[i]);
+			modle = glm::rotate(modle, glm::radians(-50.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+//			glm::mat4 view(1.0f);
+////			view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+//			view = glm::ortho(-20.0f,20.0f,-20.0f,20.0f,0.01f,100.0f);
+//			glm::mat4 proj = glm::perspective(glm::radians(45.0f), 800.0f / 800.0f, 0.1f, 100.0f);
+//
+//			trans = proj * view * modle;
+//
+//			float angle = 20.0f * i;
+			x += 0.001f;
+			modle = glm::rotate(modle, x/10.0f * (i+1), glm::vec3(sin(x*i), cos(x), 0.0f));
+
+
+			shader->setMat4("model", modle);
+
+ 
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		}
+
+
+		//		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		//测试提交
+
+
 		//		cout << time%10 /10.0f << endl;
+				std::cout << time <<std:: endl;
 
 		//		if (time % 6 < 3)
 		//		{
@@ -262,11 +379,10 @@ int main()
 		//		shader->setFloat("move", time % 10 / 10.0f);
 
 		//		glBindVertexArray(VAO[time % 3]);
-		glBindVertexArray(VAO[0]);
+		//		glBindVertexArray(VAO[0]);
+		glBindVertexArray(cubeVAO);
 
-		trans = glm::rotate(trans, glm::sin(time/10.0f)/10.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
-		shader->setMat4("transform", trans);
 
 		//api熟悉阶段
 
