@@ -11,6 +11,12 @@
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c">
       <Filter>include</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils.cpp">
+      <Filter>util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -18,6 +24,9 @@
     </ClInclude>
     <ClInclude Include="stb_image.h">
       <Filter>image</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +58,12 @@
     </Filter>
     <Filter Include="include">
       <UniqueIdentifier>{fbda84aa-e38e-47b6-8cf5-89df7322f7a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{2eb44086-9377-4cad-9538-cda6bebd791e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="util">
+      <UniqueIdentifier>{0b0bc7a3-16e9-4f58-a43a-f4519c232d3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

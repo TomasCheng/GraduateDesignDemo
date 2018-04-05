@@ -7,6 +7,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/fwd.hpp>
+#include "Camera.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -17,6 +18,12 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 float x;
 Shader* shader;
 glm::mat4 trans(1.0f);
+
+Camera *camera;
+
+float angleX;
+float moveY;
+float R = 20.0f;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
@@ -31,9 +38,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		//		std::cout << "x:" << x << std::endl;
 		//		//按下UP键增加混合比例
 		//		x += 1.0f;
-		trans = glm::rotate(trans, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+//		trans = glm::rotate(trans, glm::radians(10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+//
+//		shader->setMat4("transform", trans);
 
-		shader->setMat4("transform", trans);
 	}
 	//		key_UD = key_UD + 0.1f;
 	if (key == GLFW_KEY_DOWN && action == GLFW_REPEAT)
@@ -42,12 +50,46 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		//		shader->setFloat("x", x);
 		//		std::cout << "x:" << x << std::endl;
 
-		trans = glm::rotate(trans, glm::radians(-10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-		shader->setMat4("transform", trans);
+//		trans = glm::rotate(trans, glm::radians(-10.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+//		shader->setMat4("transform", trans);
 
 		//按下DOWN减小混合比例
 	}
 	//		key_UD = key_UD - 0.1f;
+
+	if(key == GLFW_KEY_W && action == GLFW_REPEAT)
+	{
+		moveY = 0.5f;
+		camera->translate(vec3(0.0f, moveY, 0.0f));
+
+	}
+	if (key == GLFW_KEY_S && action == GLFW_REPEAT)
+	{
+		moveY = -0.5f;
+
+		camera->translate(vec3(0.0f, moveY, 0.0f));
+
+
+
+	}
+	if (key == GLFW_KEY_A && action == GLFW_REPEAT)
+	{
+		angleX += -0.1f;
+
+
+
+		camera->setPosition(glm::vec3(R*glm::sin(angleX), moveY, R*glm::cos(angleX)));
+
+	}
+	if (key == GLFW_KEY_D && action == GLFW_REPEAT)
+	{
+		angleX += 0.1f;
+
+		camera->setPosition(glm::vec3(R*glm::sin(angleX), moveY, R*glm::cos(angleX)));
+
+	}
+
+
 }
 
 int main()
@@ -325,6 +367,10 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
+	camera = new Camera(glm::vec3(0.0f, 0.0f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+
+	shader->setMat4("view", camera->ViewMat4);
+
 	//主循环，判断窗口是否要关闭
 	while (!glfwWindowShouldClose(window))
 	{
@@ -347,6 +393,9 @@ int main()
 //
 //			float angle = 20.0f * i;
 			x += 0.001f;
+
+			modle = glm::translate(modle, glm::vec3(0.0f,glm::sin(x*(i+1)),0.0f));
+
 			modle = glm::rotate(modle, x/10.0f * (i+1), glm::vec3(sin(x*i), cos(x), 0.0f));
 
 
@@ -382,6 +431,8 @@ int main()
 		//		glBindVertexArray(VAO[0]);
 		glBindVertexArray(cubeVAO);
 
+		shader->setMat4("view", camera->ViewMat4);
+		shader->setFloat("lerp", glm::cos(x));
 
 
 		//api熟悉阶段

@@ -7,7 +7,7 @@ in vec2 TexCoord;
 uniform sampler2D ourTexture1;
 uniform sampler2D ourTexture2;
 
-uniform float x;
+uniform float lerp;
 
 void main()
 {
@@ -19,7 +19,7 @@ void main()
 	//c.a = 0.5;
 	//FragColor = c * vec4(ourColor, 0.1f) ;
 	//mixÎª²åÖµº¯Êý
-	FragColor = mix(c1,c2,x);
+	FragColor = mix(c1,c2,lerp);
 	//FragColor = c1;
 
 } 
