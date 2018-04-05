@@ -20,6 +20,10 @@ public:
 
 	// 构造器读取并构建着色器
 	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
+	Shader()
+	{
+		
+	}
 	// 使用/激活程序
 	void use();
 	// uniform工具函数
