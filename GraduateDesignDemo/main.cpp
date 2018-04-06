@@ -26,6 +26,13 @@ GLuint texContainer, texAwesomeface;//纹理id
 float key_UD = 0.5f;//混合比例
 GLuint VBO, VAO;
 
+//灯光
+GLuint lightVAO;
+glm::vec3 lightPos(3.0f, 1.0f, 2.0f);
+Shader lightShader;
+glm::vec3 lightColor(1.0f, 1.0f, 0.0f);
+glm::vec3 objectColor(1.0f, 0.5f, 0.31f);
+
 GLfloat deltaTime = 0.0f;   // 当前帧遇上一帧的时间差
 GLfloat lastFrame = 0.0f;   // 上一帧的时间
 
@@ -40,8 +47,18 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+void lightInit()
+{
+	glGenVertexArrays(1, &lightVAO);
+	glBindVertexArray(lightVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+}
+
 void shaderInit() {
-	shader = Shader("Shader.vs","Shader.fs");
+	shader = Shader("Shader.vs", "Shader.fs");
+	lightShader = Shader("Shader.vs","Light.fs");
 }
 void textureInit() {
 	texContainer = loadTexture("container.jpg", GL_CLAMP_TO_EDGE, GL_LINEAR);
@@ -192,6 +209,15 @@ int main()
 	textureInit();
 	//初始化顶点对象数据
 	vertexObjectInit();
+	//初始化灯光VAO
+	lightInit();
+
+	shader.use();
+	shader.setVec3("lightColor", lightColor);
+	shader.setVec3("objectColor", objectColor);
+
+	lightShader.use();
+	lightShader.setVec3("lightColor", lightColor);
 
 	mainCamera = Camera();
 	//让窗口接受输入并保持运行
@@ -213,24 +239,27 @@ int main()
 		GLfloat offsetx = (sin(timeValue) / 2) + 0.5;
 		GLfloat offsety = (cos(timeValue) / 2) + 0.5;
 
+		
+
+
 
 		//绘制长方形     
 		shader.use();
 		//绑定两张贴图
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texContainer);
-		glUniform1i(glGetUniformLocation(shader.ID, "ourTexture1"), 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, texAwesomeface);
-		glUniform1i(glGetUniformLocation(shader.ID, "ourTexture2"), 1);
+//		glActiveTexture(GL_TEXTURE0);
+//		glBindTexture(GL_TEXTURE_2D, texContainer);
+//		glUniform1i(glGetUniformLocation(shader.ID, "ourTexture1"), 0);
+//		glActiveTexture(GL_TEXTURE1);
+//		glBindTexture(GL_TEXTURE_2D, texAwesomeface);
+//		glUniform1i(glGetUniformLocation(shader.ID, "ourTexture2"), 1);
 
 		// 更新uniform值
 		//设置运动轨迹
 		//GLint vertexorangeLocation = glGetUniformLocation(shader.Program, "offset");
 		//glUniform4f(vertexorangeLocation, offsetx, offsety, 0.0f, 1.0f);
 		//设置混合比例
-		GLint mixPar = glGetUniformLocation(shader.ID, "lerp");
-		glUniform1f(mixPar, key_UD);
+//		GLint mixPar = glGetUniformLocation(shader.ID, "lerp");
+//		glUniform1f(mixPar, key_UD);
 
 
 
@@ -240,47 +269,72 @@ int main()
 		glm::mat4 view(1.0f);
 		view = mainCamera.GetViewMatrix();
 
-		glm::mat4 projection(1.0f);
-		projection = glm::perspective(mainCamera.Zoom*scrollSpeed, (float)(WIDTH / HEIGHT), 0.1f, 100.0f);
+		glm::mat4 proj(1.0f);
+		proj = glm::perspective(mainCamera.Zoom*scrollSpeed, (float)(WIDTH / HEIGHT), 0.1f, 100.0f);
 
 		GLint modelLoc = glGetUniformLocation(shader.ID, "model");
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model0));
 		GLint viewLoc = glGetUniformLocation(shader.ID, "view");
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		GLint projectionLoc = glGetUniformLocation(shader.ID, "proj");
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
 
 
 		glm::vec3 cubePositions[] = {
+			glm::vec3(-10.0f,  0.0f,  0.0f),
+			glm::vec3(-8.0f,  0.0f,  0.0f),
+			glm::vec3(-6.0f,  0.0f,  0.0f),
+			glm::vec3(-4.0f,  0.0f,  0.0f),
+			glm::vec3(-2.0f,  0.0f,  0.0f),
 			glm::vec3(0.0f,  0.0f,  0.0f),
-			glm::vec3(2.0f,  5.0f, -15.0f),
-			glm::vec3(-1.5f, -2.2f, -2.5f),
-			glm::vec3(-3.8f, -2.0f, -12.3f),
-			glm::vec3(2.4f, -0.4f, -3.5f),
-			glm::vec3(-1.7f,  3.0f, -7.5f),
-			glm::vec3(1.3f, -2.0f, -2.5f),
-			glm::vec3(1.5f,  2.0f, -2.5f),
-			glm::vec3(1.5f,  0.2f, -1.5f),
-			glm::vec3(-1.3f,  1.0f, -1.5f)
+			glm::vec3(2.0f,  0.0f,  0.0f),
+			glm::vec3(4.0f,  0.0f,  0.0f),
+			glm::vec3(6.0f,  0.0f,  0.0f),
+			glm::vec3(8.0f,  0.0f,  0.0f),
+			
 		};
 
 		glBindVertexArray(VAO);
-		for (GLuint i = 0; i < 10; i++)
-		{
-			glm::mat4 model(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			if (i < 9) {
-				GLfloat angle = (GLfloat)glfwGetTime()*5.0f * i;
-				model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
-				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			}
-			else
-			{
-				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			}
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+
+		shader.use();
+					glm::mat4 model(1.0f);
+					model = glm::translate(model, cubePositions[0]);
+
+//		for (GLuint i = 0; i < 10; i++)
+//		{
+//			glm::mat4 model(1.0f);
+//			model = glm::translate(model, cubePositions[i]);
+//			if (i < 0) {
+//				GLfloat angle = (GLfloat)glfwGetTime()*5.0f * i;
+//				model = glm::rotate(model, angle, glm::vec3(1.0f, 0.3f, 0.5f));
+//				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+//			}
+//			else
+//			{
+//				glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+//			}
+//			glDrawArrays(GL_TRIANGLES, 0, 36);
+//		}
 		glBindVertexArray(0);
+
+
+		//灯光设置
+		lightShader.use();
+		glBindVertexArray(lightVAO);
+		glm::mat4 lightModel(1.0f);
+		lightModel = glm::translate(lightModel, lightPos);
+		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+		lightShader.setMat4("model", lightModel);
+		lightShader.setMat4("view", view);
+		lightShader.setMat4("proj", proj);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		shader.use();
+		shader.setVec3("lightColor", lightColor *(float)glm::sin(glfwGetTime()));
+		lightShader.use();
+		lightShader.setVec3("lightColor", lightColor*(float)glm::sin(glfwGetTime()));
+
 
 		//交换缓冲
 		glfwSwapBuffers(window);

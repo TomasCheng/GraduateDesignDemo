@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="Light.fs" />
     <None Include="Shader.fs" />
     <None Include="Shader.vs" />
   </ItemGroup>
