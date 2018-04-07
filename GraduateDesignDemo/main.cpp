@@ -22,6 +22,8 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 Camera mainCamera;
 Shader shader; //shader
 GLuint texContainer, texAwesomeface; //纹理id
+GLuint diffuseMap;
+GLuint specularMap;
 
 float key_UD = 0.5f; //混合比例
 GLuint VBO, VAO;
@@ -66,8 +68,11 @@ void shaderInit()
 
 void textureInit()
 {
-	texContainer = loadTexture("container.jpg", GL_CLAMP_TO_EDGE, GL_LINEAR);
-	texAwesomeface = loadTexture("wall.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+//	texContainer = loadTexture("container.jpg", GL_CLAMP_TO_EDGE, GL_LINEAR);
+//	texAwesomeface = loadTexture("wall.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+	diffuseMap = loadTexture("container2.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+	specularMap = loadTexture("matrix.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+//	specularMap = loadTexture("container2.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
 }
 
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
@@ -95,7 +100,7 @@ GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
 	glGenerateMipmap(GL_TEXTURE_2D);
 	//释放图像的内存并解绑纹理对象
 	stbi_image_free(image);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	return texture;
 }
@@ -222,7 +227,7 @@ int main()
 
 	shader.use();
 	shader.setVec3("lightColor", lightColor);
-	shader.setVec3("objectColor", objectColor);
+//	shader.setVec3("objectColor", objectColor);
 
 	lightShader.use();
 	lightShader.setVec3("lightColor", lightColor);
@@ -311,24 +316,29 @@ int main()
 		shader.setMat4("model", model);
 		shader.setVec3("viewPos", mainCamera.Position);
 
-		lightColor.x = sin(glfwGetTime() * 2.0f);
-		lightColor.y = sin(glfwGetTime() * 0.7f);
-		lightColor.z = sin(glfwGetTime() * 1.3f);
+//		lightColor.x = sin(glfwGetTime() * 2.0f);
+//		lightColor.y = sin(glfwGetTime() * 0.7f);
+//		lightColor.z = sin(glfwGetTime() * 1.3f);
 
 		shader.setVec3("lightColor", lightColor);
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // 降低影响
-		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // 
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(1.0f); // 
 
-		shader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-		shader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-		shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+//		shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		shader.setFloat("material.shininess", 32.0f);
 
 		shader.setVec3("light.ambient", ambientColor);
 		shader.setVec3("light.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
 		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		shader.setVec3("light.position", lightPos);
+		shader.setVec3("light.position", dynamicLightPos);
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuseMap);
+		shader.setInt("material.diffuse", 0);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specularMap);
+		shader.setInt("material.specular", 1);
+		
 
 
 		glDrawArrays(GL_TRIANGLES, 0, 36);
