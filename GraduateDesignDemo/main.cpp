@@ -306,22 +306,40 @@ int main()
 		glBindVertexArray(VAO);
 		//第一个立方体
 		shader.use();
-		shader.setVec3("lightColor", lightColor);
-		shader.setVec3("lightPos", dynamicLightPos);
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, cubePositions[0]);
 		shader.setMat4("model", model);
 		shader.setVec3("viewPos", mainCamera.Position);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		//第二个
+		lightColor.x = sin(glfwGetTime() * 2.0f);
+		lightColor.y = sin(glfwGetTime() * 0.7f);
+		lightColor.z = sin(glfwGetTime() * 1.3f);
+
 		shader.setVec3("lightColor", lightColor);
-		shader.setVec3("lightPos", dynamicLightPos);
-		glm::mat4 model1(1.0f);
-		model = glm::translate(model1, cubePositions[1]);
-		shader.setMat4("model", model);
-		shader.setVec3("viewPos", mainCamera.Position);
+		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // 降低影响
+		glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
+
+		shader.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+		shader.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+		shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+		shader.setFloat("material.shininess", 32.0f);
+
+		shader.setVec3("light.ambient", ambientColor);
+		shader.setVec3("light.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+		shader.setVec3("light.position", lightPos);
+
+
+
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+//		//第二个
+//		shader.setVec3("lightColor", lightColor);
+//		shader.setVec3("lightPos", dynamicLightPos);
+//		glm::mat4 model1(1.0f);
+//		model = glm::translate(model1, cubePositions[1]);
+//		shader.setMat4("model", model);
+//		shader.setVec3("viewPos", mainCamera.Position);
+//		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 
 

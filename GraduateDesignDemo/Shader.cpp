@@ -111,4 +111,10 @@ void Shader::setVec3(const std::string& name, glm::vec3 value) const
 
 }
 
+void Shader::setVec3(const std::string& name, float a, float b, float c) const
+{
+	glm::vec3 v(a, b, c);
+	setVec3(name, v);
+}
+
 
