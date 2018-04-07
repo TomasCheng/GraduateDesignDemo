@@ -1,8 +1,11 @@
 #version 330 core
 out vec4 FragColor;
 
-in vec3 ourColor;
+in vec3 Normal;
 in vec2 TexCoord;
+
+in vec3 FragPos;
+
 
 uniform sampler2D ourTexture1;
 uniform sampler2D ourTexture2;
@@ -10,11 +13,34 @@ uniform sampler2D ourTexture2;
 uniform float lerp;
 
 uniform vec3 lightColor;
+uniform vec3 lightPos;
+
+uniform vec3 viewPos;
+
 uniform vec3 objectColor;
 
 void main()
 {
-    FragColor = vec4((lightColor * objectColor), 1.0f);
+	//环境光
+	float ambientStrenth = 0.1f;
+	vec3 ambient  = ambientStrenth * lightColor;
+	//漫反射
+	vec3 norm = normalize(Normal);
+	vec3 lightDir = normalize(lightPos - FragPos);
+	float diff = max(dot(norm,lightDir),0.0f);
+	vec3 diffuse = diff * lightColor;
+	//高光
+	float specularStrength = 0.5f;
+	int shininess = 32;//反光度
+	vec3 viewDir = normalize(viewPos - FragPos);
+	vec3 reflectDir = reflect(-lightDir,norm);
+	float spec = pow(max(dot(reflectDir,viewDir),0.0f),shininess);
+	vec3 specular = spec * specularStrength * lightColor;
+
+
+	vec3 result = (ambient + diffuse + specular)* objectColor;
+
+    FragColor = vec4(result, 1.0f);
 	//用我们的纹理坐标来对纹理采样
 
 	//vec4 c1 = texture(ourTexture1,TexCoord);
