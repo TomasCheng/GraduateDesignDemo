@@ -7,9 +7,27 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/fwd.hpp>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
+
 #include "Camera.h"
 using namespace std;
+void loadModel(string path)
+{
+	Assimp::Importer import;
+	const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
+	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
+		return;
+	}
+//	directory = path.substr(0, path.find_last_of('/'));
+//
+//	processNode(scene->mRootNode, scene);
+}
 
 const GLuint WIDTH = 800, HEIGHT = 800;
 
@@ -224,6 +242,8 @@ int main()
 	vertexObjectInit();
 	//≥ı ºªØµ∆π‚VAO
 	lightInit();
+
+	loadModel("nanosuit/nanosuit.obj");
 
 	shader.use();
 	shader.setVec3("lightColor", lightColor);
