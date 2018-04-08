@@ -7,11 +7,16 @@ struct Material {
     float shininess;
 }; 
 struct Light {
-    //vec3 position;
-	vec3 direction;
+    vec3 position;
+	//vec3 direction;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+	//点光源的衰减系数
+	float constant;
+	float linear;
+	float quadratic;
 };
 
 
@@ -33,13 +38,17 @@ uniform vec3 viewPos;
 
 void main()
 {
+	//计算点光源的衰减
+	float distance = length(light.position - FragPos);
+	float attenuation = 1.0f/(light.constant + light.linear * distance + light.quadratic*(distance * distance));
+
 	    // 环境光
     vec3 ambient = light.ambient  * vec3(texture(material.diffuse,TexCoord));
 
     // 漫反射 
     vec3 norm = normalize(Normal);
-    //vec3 lightDir = normalize(light.position - FragPos);
-    vec3 lightDir = normalize(-light.direction);
+    vec3 lightDir = normalize(light.position - FragPos);
+    //vec3 lightDir = normalize(-light.direction);
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = light.diffuse  * diff * vec3(texture(material.diffuse,TexCoord));
 
@@ -51,7 +60,7 @@ void main()
 
     vec3 result = ambient + diffuse + specular;
 
-    FragColor = vec4(result, 1.0);
+    FragColor = vec4(result * attenuation, 1.0);
 
 	//用我们的纹理坐标来对纹理采样
 
