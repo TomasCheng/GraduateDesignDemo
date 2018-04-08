@@ -350,11 +350,12 @@ int main()
 		shader.setVec3("light.ambient", ambientColor);
 		shader.setVec3("light.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
 		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		shader.setVec3("light.position", dynamicLightPos);
-//		shader.setVec3("light.direction", -lightPos);
-		shader.setFloat("light.constant", 1.0f);
-		shader.setFloat("light.linear", 0.09f);
-		shader.setFloat("light.quadratic", 0.032f);
+		shader.setVec3("light.position", mainCamera.Position);
+		shader.setVec3("light.direction", mainCamera.Front);
+		shader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f)));
+//		shader.setFloat("light.constant", 1.0f);
+//		shader.setFloat("light.linear", 0.09f);
+//		shader.setFloat("light.quadratic", 0.032f);
 
 
 		glActiveTexture(GL_TEXTURE0);
