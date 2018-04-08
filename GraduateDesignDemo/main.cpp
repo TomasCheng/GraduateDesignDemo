@@ -48,7 +48,7 @@ GLuint VBO, VAO;
 
 //灯光
 GLuint lightVAO;
-glm::vec3 lightPos(-9.0f, 1.3f, 0.0f);
+glm::vec3 lightPos(0.0f, 1.3f, 0.0f);
 glm::vec3 dynamicLightPos = lightPos;
 Shader lightShader;
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
@@ -286,8 +286,8 @@ int main()
 		GLfloat timeValue = glfwGetTime();
 		GLfloat offsetx = 2 * ((sin(timeValue) / 2) + 0.5);
 		GLfloat offsety = 2 * ((cos(timeValue) / 2) + 0.5);
-		dynamicLightPos.x = lightPos.x + offsetx;
-		dynamicLightPos.z = lightPos.z + offsety;
+//		dynamicLightPos.x = lightPos.x + offsetx;
+//		dynamicLightPos.z = lightPos.z + offsety;
 		
 		//绑定两张贴图
 		//		glActiveTexture(GL_TEXTURE0);
@@ -350,7 +350,8 @@ int main()
 		shader.setVec3("light.ambient", ambientColor);
 		shader.setVec3("light.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
 		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		shader.setVec3("light.position", dynamicLightPos);
+//		shader.setVec3("light.position", dynamicLightPos);
+		shader.setVec3("light.direction", -lightPos);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, diffuseMap);
@@ -359,9 +360,20 @@ int main()
 		glBindTexture(GL_TEXTURE_2D, specularMap);
 		shader.setInt("material.specular", 1);
 		
-
-
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+		for(int i=1;i<10;i++)
+		{
+			glm::mat4 model(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
+			shader.setMat4("model", model);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		}
+
 //		//第二个
 //		shader.setVec3("lightColor", lightColor);
 //		shader.setVec3("lightPos", dynamicLightPos);
