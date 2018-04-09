@@ -11,22 +11,22 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-
 #include "Camera.h"
 using namespace std;
+
 void loadModel(string path)
 {
 	Assimp::Importer import;
-	const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
 
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 	{
 		cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
 		return;
 	}
-//	directory = path.substr(0, path.find_last_of('/'));
-//
-//	processNode(scene->mRootNode, scene);
+	//	directory = path.substr(0, path.find_last_of('/'));
+	//
+	//	processNode(scene->mRootNode, scene);
 }
 
 const GLuint WIDTH = 800, HEIGHT = 800;
@@ -87,10 +87,10 @@ void shaderInit()
 
 void textureInit()
 {
-//	texContainer = loadTexture("container.jpg", GL_CLAMP_TO_EDGE, GL_LINEAR);
-//	texAwesomeface = loadTexture("wall.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+	//	texContainer = loadTexture("container.jpg", GL_CLAMP_TO_EDGE, GL_LINEAR);
+	//	texAwesomeface = loadTexture("wall.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
 	diffuseMap = loadTexture("container2.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
-//	specularMap = loadTexture("matrix.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+	//	specularMap = loadTexture("matrix.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
 	specularMap = loadTexture("container2_specular.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
 }
 
@@ -129,47 +129,47 @@ void vertexObjectInit()
 	//不使用索引缓冲对象用两个三角形绘制一个梯形
 	// 设置顶点缓存和属性指针
 	GLfloat vertices[] = {
-		-0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,    0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,    1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,    1.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,    1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f, 0.0f,  0.0f, -1.0f,    0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f,  0.0f, -1.0f,    0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
 
-		-0.5f, -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f,  0.0f, 1.0f,1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f, 1.0f,1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,1.0f, 0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,0.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,0.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 
-		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,1.0f, 1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,1.0f, 0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f, 0.0f, -1.0f,  0.0f, 0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f,  0.0f, 0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
 
-		-0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f, 0.0f, 1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,1.0f, 1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,1.0f, 0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f, 0.0f,  1.0f,  0.0f, 0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f, 0.0f,  1.0f,  0.0f, 0.0f, 1.0f
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+		0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+		0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
+		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 	};
 	//创建索引缓冲对象
 	glGenBuffers(1, &VBO);
@@ -246,11 +246,7 @@ int main()
 	//初始化灯光VAO
 	lightInit();
 
-	loadModel("nanosuit/nanosuit.obj");
-
-	shader.use();
-	shader.setVec3("lightColor", lightColor);
-//	shader.setVec3("objectColor", objectColor);
+	//	loadModel("nanosuit/nanosuit.obj");
 
 	lightShader.use();
 	lightShader.setVec3("lightColor", lightColor);
@@ -268,8 +264,73 @@ int main()
 		glm::vec3(4.0f, 0.0f, 0.0f),
 		glm::vec3(6.0f, 0.0f, 0.0f),
 		glm::vec3(8.0f, 0.0f, 0.0f),
-
 	};
+
+	glm::vec3 pointLightPositions[] = {
+		glm::vec3(-6.0f, 1.5f, 0.0f),
+		glm::vec3(-2.0f, 2.0f, 0.0f),
+		glm::vec3(2.0f, 3.0f, 0.0f),
+		glm::vec3(6.0f, 4.0f, 0.0f)
+	};
+
+	//设置shader中的一些不变量
+	shader.use();
+	glm::vec3 diffuseColor = lightColor * glm::vec3(0.3f); //
+	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); //
+	glm::vec3 specularColor = glm::vec3(1.0f);
+
+	shader.setVec3("dirLight.ambient", ambientColor);
+	shader.setVec3("dirLight.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	shader.setVec3("dirLight.specular", specularColor);
+	shader.setVec3("pointLights[0].ambient", ambientColor);
+	shader.setVec3("pointLights[0].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	shader.setVec3("pointLights[0].specular", specularColor);
+	shader.setVec3("pointLights[1].ambient", ambientColor);
+	shader.setVec3("pointLights[1].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	shader.setVec3("pointLights[1].specular", specularColor);
+	shader.setVec3("pointLights[2].ambient", ambientColor);
+	shader.setVec3("pointLights[2].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	shader.setVec3("pointLights[2].specular", specularColor);
+	shader.setVec3("pointLights[3].ambient", ambientColor);
+	shader.setVec3("pointLights[3].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	shader.setVec3("pointLights[3].specular", specularColor);
+	shader.setVec3("spotLight.ambient", ambientColor);
+	shader.setVec3("spotLight.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	shader.setVec3("spotLight.specular", specularColor);
+
+	shader.setVec3("dirLight.direction", -lightPos);
+
+	shader.setVec3("spotLight.position", mainCamera.Position);
+	shader.setVec3("spotLight.direction", mainCamera.Front);
+	shader.setFloat("spotLight.cutoff", glm::cos(glm::radians(12.5f)));
+	shader.setFloat("spotLight.outerCutoff", glm::cos(glm::radians(17.5f)));
+
+	shader.setVec3("spotLight[0].position", pointLightPositions[0]);
+	shader.setFloat("pointLights[0].constant", 1.0f);
+	shader.setFloat("pointLights[0].linear", 0.09f);
+	shader.setFloat("pointLights[0].quadratic", 0.032f);
+	shader.setVec3("spotLight[1].position", pointLightPositions[1]);
+	shader.setFloat("pointLights[1].constant", 1.0f);
+	shader.setFloat("pointLights[1].linear", 0.09f);
+	shader.setFloat("pointLights[1].quadratic", 0.032f);
+	shader.setVec3("spotLight[2].position", pointLightPositions[2]);
+	shader.setFloat("pointLights[2].constant", 1.0f);
+	shader.setFloat("pointLights[2].linear", 0.09f);
+	shader.setFloat("pointLights[2].quadratic", 0.032f);
+	shader.setVec3("spotLight[3].position", pointLightPositions[3]);
+	shader.setFloat("pointLights[3].constant", 1.0f);
+	shader.setFloat("pointLights[3].linear", 0.09f);
+	shader.setFloat("pointLights[3].quadratic", 0.032f);
+
+	shader.use();
+	//材质的设置
+	shader.setFloat("material.shininess", 32.0f);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, diffuseMap);
+	shader.setInt("material.diffuse", 0);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, specularMap);
+	shader.setInt("material.specular", 1);
 
 	//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
@@ -291,25 +352,6 @@ int main()
 		GLfloat offsety = 2 * ((cos(timeValue) / 2) + 0.5);
 		dynamicLightPos.x = lightPos.x + offsetx;
 		dynamicLightPos.z = lightPos.z + offsety;
-		
-		//绑定两张贴图
-		//		glActiveTexture(GL_TEXTURE0);
-		//		glBindTexture(GL_TEXTURE_2D, texContainer);
-		//		glUniform1i(glGetUniformLocation(shader.ID, "ourTexture1"), 0);
-		//		glActiveTexture(GL_TEXTURE1);
-		//		glBindTexture(GL_TEXTURE_2D, texAwesomeface);
-		//		glUniform1i(glGetUniformLocation(shader.ID, "ourTexture2"), 1);
-
-		// 更新uniform值
-		//设置运动轨迹
-		//GLint vertexorangeLocation = glGetUniformLocation(shader.Program, "offset");
-		//glUniform4f(vertexorangeLocation, offsetx, offsety, 0.0f, 1.0f);
-		//设置混合比例
-		//		GLint mixPar = glGetUniformLocation(shader.ID, "lerp");
-		//		glUniform1f(mixPar, key_UD);
-
-//		glm::mat4 model0(1.0f);
-//		model0 = glm::rotate(model0, (GLfloat)glfwGetTime() * 5.0f, glm::vec3(0.5f, 1.0f, 0.0f));
 
 		glm::mat4 view(1.0f);
 		view = mainCamera.GetViewMatrix();
@@ -318,61 +360,16 @@ int main()
 		proj = glm::perspective(mainCamera.Zoom * scrollSpeed, (float)(WIDTH / HEIGHT), 0.1f, 100.0f);
 
 		shader.use();
-
-//		shader.setMat4("model", model0);
 		shader.setMat4("view", view);
 		shader.setMat4("proj", proj);
-
-
-//		GLint modelLoc = glGetUniformLocation(shader.ID, "model");
-//		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model0));
-//		GLint viewLoc = glGetUniformLocation(shader.ID, "view");
-//		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-//		GLint projectionLoc = glGetUniformLocation(shader.ID, "proj");
-//		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
 
 		glBindVertexArray(VAO);
 		//第一个立方体
 		shader.use();
-		glm::mat4 model(1.0f);
-		model = glm::translate(model, cubePositions[0]);
-		shader.setMat4("model", model);
 		shader.setVec3("viewPos", mainCamera.Position);
-
-//		lightColor.x = sin(glfwGetTime() * 2.0f);
-//		lightColor.y = sin(glfwGetTime() * 0.7f);
-//		lightColor.z = sin(glfwGetTime() * 1.3f);
-
-		shader.setVec3("lightColor", lightColor);
-		glm::vec3 diffuseColor = lightColor * glm::vec3(0.5f); // 
-		glm::vec3 ambientColor = diffuseColor * glm::vec3(1.0f); // 
-
-//		shader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-		shader.setFloat("material.shininess", 32.0f);
-
-		shader.setVec3("light.ambient", ambientColor);
-		shader.setVec3("light.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
-		shader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-		shader.setVec3("light.position", mainCamera.Position);
-		shader.setVec3("light.direction", mainCamera.Front);
-		shader.setFloat("light.cutoff", glm::cos(glm::radians(12.5f)));
-		shader.setFloat("light.outerCutoff", glm::cos(glm::radians(17.5f)));
-//		shader.setFloat("light.constant", 1.0f);
-//		shader.setFloat("light.linear", 0.09f);
-//		shader.setFloat("light.quadratic", 0.032f);
-
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuseMap);
-		shader.setInt("material.diffuse", 0);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specularMap);
-		shader.setInt("material.specular", 1);
-		
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
-		for(int i=1;i<10;i++)
+		shader.setVec3("spotLight.position", mainCamera.Position);
+		shader.setVec3("spotLight.direction", mainCamera.Front);
+		for (int i = 0; i < 10; i++)
 		{
 			glm::mat4 model(1.0f);
 			model = glm::translate(model, cubePositions[i]);
@@ -380,43 +377,31 @@ int main()
 			shader.setMat4("model", model);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-
 		}
-
-//		//第二个
-//		shader.setVec3("lightColor", lightColor);
-//		shader.setVec3("lightPos", dynamicLightPos);
-//		glm::mat4 model1(1.0f);
-//		model = glm::translate(model1, cubePositions[1]);
-//		shader.setMat4("model", model);
-//		shader.setVec3("viewPos", mainCamera.Position);
-//		glDrawArrays(GL_TRIANGLES, 0, 36);
-
-
 
 		//灯光设置
 		lightShader.use();
 		glBindVertexArray(lightVAO);
-		glm::mat4 lightModel(1.0f);
-		lightModel = glm::translate(lightModel, dynamicLightPos);
-		lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-		lightShader.setMat4("model", lightModel);
-		lightShader.setMat4("view", view);
-		lightShader.setMat4("proj", proj);
 
-		lightShader.setVec3("lightColor", lightColor);
+		for (const auto pointLightPosition : pointLightPositions)
+		{
+			glm::mat4 lightModel(1.0f);
+			lightModel = glm::translate(lightModel, pointLightPosition);
+			lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+			lightShader.setMat4("model", lightModel);
+			lightShader.setMat4("view", view);
+			lightShader.setMat4("proj", proj);
 
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+			lightShader.setVec3("lightColor", lightColor);
 
-		
-		
-		
-
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		//交换缓冲
 		glfwSwapBuffers(window);
 	}
 	glDeleteVertexArrays(1, &VAO);
+	glDeleteVertexArrays(1, &lightVAO);
 	glDeleteBuffers(1, &VBO);
 
 	//释放资源
@@ -465,7 +450,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	}
 
 	GLfloat xoffset = xpos - lastX;
-	GLfloat yoffset = lastY - ypos; // Reversed since y-coordinates go from bottom to left 
+	GLfloat yoffset = lastY - ypos; // Reversed since y-coordinates go from bottom to left
 
 	lastX = xpos;
 	lastY = ypos;
@@ -473,10 +458,9 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 	mainCamera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-	cout << yoffset << endl;
+	//	cout << yoffset << endl;
 	mainCamera.ProcessMouseScroll(yoffset);
 }
 
