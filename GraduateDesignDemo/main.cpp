@@ -36,6 +36,7 @@ GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER);
 void do_movement();
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void windowSize_callback(GLFWwindow* window, int width, int height);
 
 Camera mainCamera;
 Shader shader; //shader
@@ -89,8 +90,8 @@ void textureInit()
 //	texContainer = loadTexture("container.jpg", GL_CLAMP_TO_EDGE, GL_LINEAR);
 //	texAwesomeface = loadTexture("wall.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
 	diffuseMap = loadTexture("container2.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
-	specularMap = loadTexture("matrix.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
-//	specularMap = loadTexture("container2.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+//	specularMap = loadTexture("matrix.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
+	specularMap = loadTexture("container2_specular.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
 }
 
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
@@ -212,6 +213,8 @@ int main()
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
+	//注册窗口大小发生变化时的回调
+	glfwSetWindowSizeCallback(window, windowSize_callback);
 	//注册键盘回调
 	glfwSetKeyCallback(window, key_callback);
 	//注册鼠标回调
@@ -475,4 +478,9 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	cout << yoffset << endl;
 	mainCamera.ProcessMouseScroll(yoffset);
+}
+
+void windowSize_callback(GLFWwindow* window, int width, int height)
+{
+	glViewport(0, 0, width, height);
 }
