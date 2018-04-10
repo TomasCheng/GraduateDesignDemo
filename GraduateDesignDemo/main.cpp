@@ -10,24 +10,9 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-
+#include "Model.h"
 #include "Camera.h"
 using namespace std;
-
-void loadModel(string path)
-{
-	Assimp::Importer import;
-	const aiScene* scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-
-	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
-	{
-		cout << "ERROR::ASSIMP::" << import.GetErrorString() << endl;
-		return;
-	}
-	//	directory = path.substr(0, path.find_last_of('/'));
-	//
-	//	processNode(scene->mRootNode, scene);
-}
 
 const GLuint WIDTH = 800, HEIGHT = 800;
 
@@ -39,13 +24,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void windowSize_callback(GLFWwindow* window, int width, int height);
 
 Camera mainCamera;
-Shader shader; //shader
-GLuint texContainer, texAwesomeface; //纹理id
-GLuint diffuseMap;
-GLuint specularMap;
-
-float key_UD = 0.5f; //混合比例
-GLuint VBO, VAO;
+Shader modelShader; //modelShader
 
 //灯光
 GLuint lightVAO;
@@ -53,8 +32,6 @@ glm::vec3 lightPos(0.0f, 2.3f, 0.0f);
 glm::vec3 dynamicLightPos = lightPos;
 Shader lightShader;
 glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
-glm::vec3 objectColor(1.0f, 0.5f, 0.31f);
-//glm::vec3 objectColor(1.0f, 0.0f, 0.0f);
 
 GLfloat deltaTime = 0.0f; // 当前帧遇上一帧的时间差
 GLfloat lastFrame = 0.0f; // 上一帧的时间
@@ -65,10 +42,11 @@ GLfloat lastX = 400, lastY = 300;
 GLfloat scrollSpeed = 0.05f;
 bool firstMouse = true;
 
-//
-//glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-//glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-//glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+GLuint VAO, VBO;
+
+float moveF;
+float moveR;
+float moveU;
 
 void lightInit()
 {
@@ -76,22 +54,13 @@ void lightInit()
 	glBindVertexArray(lightVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), static_cast<void*>(0));
 }
 
 void shaderInit()
 {
-	shader = Shader("Shader.vs", "Shader.fs");
+	modelShader = Shader("Shader.vs", "Shader.fs");
 	lightShader = Shader("Shader.vs", "Light.fs");
-}
-
-void textureInit()
-{
-	//	texContainer = loadTexture("container.jpg", GL_CLAMP_TO_EDGE, GL_LINEAR);
-	//	texAwesomeface = loadTexture("wall.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
-	diffuseMap = loadTexture("container2.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
-	//	specularMap = loadTexture("matrix.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
-	specularMap = loadTexture("container2_specular.jpg", GL_MIRRORED_REPEAT, GL_NEAREST);
 }
 
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
@@ -239,32 +208,17 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	//初始化并绑定shaders
 	shaderInit();
-	//初始化textures
-	textureInit();
 	//初始化顶点对象数据
 	vertexObjectInit();
 	//初始化灯光VAO
 	lightInit();
 
-	//	loadModel("nanosuit/nanosuit.obj");
+	Model nanoModel("nanosuit/nanosuit.obj");
 
 	lightShader.use();
 	lightShader.setVec3("lightColor", lightColor);
 
 	mainCamera = Camera();
-
-	glm::vec3 cubePositions[] = {
-		glm::vec3(-10.0f, 0.0f, 0.0f),
-		glm::vec3(-8.0f, 0.0f, 0.0f),
-		glm::vec3(-6.0f, 0.0f, 0.0f),
-		glm::vec3(-4.0f, 0.0f, 0.0f),
-		glm::vec3(-2.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(2.0f, 0.0f, 0.0f),
-		glm::vec3(4.0f, 0.0f, 0.0f),
-		glm::vec3(6.0f, 0.0f, 0.0f),
-		glm::vec3(8.0f, 0.0f, 0.0f),
-	};
 
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(-6.0f, 1.5f, 0.0f),
@@ -272,65 +226,60 @@ int main()
 		glm::vec3(2.0f, 3.0f, 0.0f),
 		glm::vec3(6.0f, 4.0f, 0.0f)
 	};
+	glm::vec3 zeroPos(0.0f);
 
 	//设置shader中的一些不变量
-	shader.use();
-	glm::vec3 diffuseColor = lightColor * glm::vec3(0.3f); //
+	modelShader.use();
+	glm::vec3 diffuseColor = lightColor * glm::vec3(0.6f); //
 	glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); //
 	glm::vec3 specularColor = glm::vec3(1.0f);
 
-	shader.setVec3("dirLight.ambient", ambientColor);
-	shader.setVec3("dirLight.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
-	shader.setVec3("dirLight.specular", specularColor);
-	shader.setVec3("pointLights[0].ambient", ambientColor);
-	shader.setVec3("pointLights[0].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
-	shader.setVec3("pointLights[0].specular", specularColor);
-	shader.setVec3("pointLights[1].ambient", ambientColor);
-	shader.setVec3("pointLights[1].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
-	shader.setVec3("pointLights[1].specular", specularColor);
-	shader.setVec3("pointLights[2].ambient", ambientColor);
-	shader.setVec3("pointLights[2].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
-	shader.setVec3("pointLights[2].specular", specularColor);
-	shader.setVec3("pointLights[3].ambient", ambientColor);
-	shader.setVec3("pointLights[3].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
-	shader.setVec3("pointLights[3].specular", specularColor);
-	shader.setVec3("spotLight.ambient", ambientColor);
-	shader.setVec3("spotLight.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
-	shader.setVec3("spotLight.specular", specularColor);
+	modelShader.setVec3("dirLight.ambient", ambientColor);
+	modelShader.setVec3("dirLight.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	modelShader.setVec3("dirLight.specular", specularColor);
+	modelShader.setVec3("pointLights[0].ambient", ambientColor);
+	modelShader.setVec3("pointLights[0].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	modelShader.setVec3("pointLights[0].specular", specularColor);
+	modelShader.setVec3("pointLights[1].ambient", ambientColor);
+	modelShader.setVec3("pointLights[1].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	modelShader.setVec3("pointLights[1].specular", specularColor);
+	modelShader.setVec3("pointLights[2].ambient", ambientColor);
+	modelShader.setVec3("pointLights[2].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	modelShader.setVec3("pointLights[2].specular", specularColor);
+	modelShader.setVec3("pointLights[3].ambient", ambientColor);
+	modelShader.setVec3("pointLights[3].diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	modelShader.setVec3("pointLights[3].specular", specularColor);
+	modelShader.setVec3("spotLight.ambient", ambientColor);
+	modelShader.setVec3("spotLight.diffuse", diffuseColor); // 将光照调暗了一些以搭配场景
+	modelShader.setVec3("spotLight.specular", specularColor);
 
-	shader.setVec3("dirLight.direction", -lightPos);
+	modelShader.setVec3("dirLight.direction", -lightPos);
 
-	shader.setVec3("spotLight.position", mainCamera.Position);
-	shader.setVec3("spotLight.direction", mainCamera.Front);
-	shader.setFloat("spotLight.cutoff", glm::cos(glm::radians(12.5f)));
-	shader.setFloat("spotLight.outerCutoff", glm::cos(glm::radians(17.5f)));
+	modelShader.setVec3("spotLight.position", mainCamera.Position);
+	modelShader.setVec3("spotLight.direction", mainCamera.Front);
+	modelShader.setFloat("spotLight.cutoff", glm::cos(glm::radians(12.5f)));
+	modelShader.setFloat("spotLight.outerCutoff", glm::cos(glm::radians(17.5f)));
 
-	shader.setVec3("spotLight[0].position", pointLightPositions[0]);
-	shader.setFloat("pointLights[0].constant", 1.0f);
-	shader.setFloat("pointLights[0].linear", 0.09f);
-	shader.setFloat("pointLights[0].quadratic", 0.032f);
-	shader.setVec3("spotLight[1].position", pointLightPositions[1]);
-	shader.setFloat("pointLights[1].constant", 1.0f);
-	shader.setFloat("pointLights[1].linear", 0.09f);
-	shader.setFloat("pointLights[1].quadratic", 0.032f);
-	shader.setVec3("spotLight[2].position", pointLightPositions[2]);
-	shader.setFloat("pointLights[2].constant", 1.0f);
-	shader.setFloat("pointLights[2].linear", 0.09f);
-	shader.setFloat("pointLights[2].quadratic", 0.032f);
-	shader.setVec3("spotLight[3].position", pointLightPositions[3]);
-	shader.setFloat("pointLights[3].constant", 1.0f);
-	shader.setFloat("pointLights[3].linear", 0.09f);
-	shader.setFloat("pointLights[3].quadratic", 0.032f);
+	modelShader.setVec3("spotLight[0].position", pointLightPositions[0]);
+	modelShader.setFloat("pointLights[0].constant", 1.0f);
+	modelShader.setFloat("pointLights[0].linear", 0.09f);
+	modelShader.setFloat("pointLights[0].quadratic", 0.032f);
+	modelShader.setVec3("spotLight[1].position", pointLightPositions[1]);
+	modelShader.setFloat("pointLights[1].constant", 1.0f);
+	modelShader.setFloat("pointLights[1].linear", 0.09f);
+	modelShader.setFloat("pointLights[1].quadratic", 0.032f);
+	modelShader.setVec3("spotLight[2].position", pointLightPositions[2]);
+	modelShader.setFloat("pointLights[2].constant", 1.0f);
+	modelShader.setFloat("pointLights[2].linear", 0.09f);
+	modelShader.setFloat("pointLights[2].quadratic", 0.032f);
+	modelShader.setVec3("spotLight[3].position", pointLightPositions[3]);
+	modelShader.setFloat("pointLights[3].constant", 1.0f);
+	modelShader.setFloat("pointLights[3].linear", 0.09f);
+	modelShader.setFloat("pointLights[3].quadratic", 0.032f);
 
-	shader.use();
+	modelShader.use();
 	//材质的设置
-	shader.setFloat("material.shininess", 32.0f);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, diffuseMap);
-	shader.setInt("material.diffuse", 0);
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, specularMap);
-	shader.setInt("material.specular", 1);
+	modelShader.setFloat("material.shininess", 32.0f);
 
 	//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
@@ -359,25 +308,27 @@ int main()
 		glm::mat4 proj(1.0f);
 		proj = glm::perspective(mainCamera.Zoom * scrollSpeed, (float)(WIDTH / HEIGHT), 0.1f, 100.0f);
 
-		shader.use();
-		shader.setMat4("view", view);
-		shader.setMat4("proj", proj);
+		modelShader.use();
+		modelShader.setMat4("view", view);
+		modelShader.setMat4("proj", proj);
 
 		glBindVertexArray(VAO);
 		//第一个立方体
-		shader.use();
-		shader.setVec3("viewPos", mainCamera.Position);
-		shader.setVec3("spotLight.position", mainCamera.Position);
-		shader.setVec3("spotLight.direction", mainCamera.Front);
-		for (int i = 0; i < 10; i++)
-		{
-			glm::mat4 model(1.0f);
-			model = glm::translate(model, cubePositions[i]);
-			model = glm::rotate(model, glm::radians(20.0f * i), glm::vec3(1.0f, 0.3f, 0.5f));
-			shader.setMat4("model", model);
+		modelShader.use();
+		glm::mat4 model(1.0f);
+		model = glm::translate(model, zeroPos);
+		model = glm::translate(model, glm::vec3(moveR, moveU, moveF));
+		model = glm::scale(model, glm::vec3(0.2f));
 
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		model = glm::rotate(model, glm::radians(timeValue * 20), glm::vec3(moveR, 1.0f, moveF));
+
+		modelShader.setVec3("viewPos", mainCamera.Position);
+		modelShader.setVec3("spotLight.position", mainCamera.Position);
+		modelShader.setVec3("spotLight.direction", mainCamera.Front);
+
+		modelShader.setMat4("model", model);
+
+		nanoModel.Draw(modelShader);
 
 		//灯光设置
 		lightShader.use();
@@ -396,6 +347,19 @@ int main()
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
+
+		//画原点
+		glBindVertexArray(lightVAO);
+		glm::mat4 lightModel(1.0f);
+		lightModel = glm::translate(lightModel, zeroPos);
+		lightModel = glm::scale(lightModel, glm::vec3(0.1f));
+		lightShader.setMat4("model", lightModel);
+		lightShader.setMat4("view", view);
+		lightShader.setMat4("proj", proj);
+
+		lightShader.setVec3("lightColor", glm::vec3(1.0f, 0.0f, 0.0f));
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//交换缓冲
 		glfwSwapBuffers(window);
@@ -421,6 +385,31 @@ void do_movement()
 		mainCamera.ProcessKeyboard(LEFT, deltaTime);
 	if (keys[GLFW_KEY_D])
 		mainCamera.ProcessKeyboard(RIGHT, deltaTime);
+
+	if (keys[GLFW_KEY_UP])
+	{
+		moveF += 0.05f;
+	}
+	if (keys[GLFW_KEY_DOWN])
+	{
+		moveF -= 0.05f;
+	}
+	if (keys[GLFW_KEY_RIGHT])
+	{
+		moveR += 0.05f;
+	}
+	if (keys[GLFW_KEY_LEFT])
+	{
+		moveR -= 0.05f;
+	}
+	if (keys[GLFW_KEY_PAGE_UP])
+	{
+		moveU += 0.05f;
+	}
+	if (keys[GLFW_KEY_PAGE_DOWN])
+	{
+		moveU -= 0.05f;
+	}
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -429,10 +418,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// 关闭应用程序
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
-	if (key == GLFW_KEY_UP && action == GLFW_PRESS) //按下UP键增加混合比例
-		key_UD = key_UD + 0.1f;
-	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS) //按下DOWN减小混合比例
-		key_UD = key_UD - 0.1f;
 
 	if (action == GLFW_PRESS)
 		keys[key] = true;

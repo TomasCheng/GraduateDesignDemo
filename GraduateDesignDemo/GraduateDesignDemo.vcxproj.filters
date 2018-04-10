@@ -17,6 +17,12 @@
     <ClCompile Include="Utils.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -27,6 +33,12 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +72,12 @@
     <None Include="Light.fs">
       <Filter>shader</Filter>
     </None>
+    <None Include="ModelShader.vs">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="ModelShader.fs">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="image">
@@ -76,6 +94,9 @@
     </Filter>
     <Filter Include="util">
       <UniqueIdentifier>{0b0bc7a3-16e9-4f58-a43a-f4519c232d3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model">
+      <UniqueIdentifier>{fd562af7-30c1-4ede-8bc6-cc2f0a85ea34}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
