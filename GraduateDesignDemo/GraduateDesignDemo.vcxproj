@@ -123,6 +123,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Floor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Floor.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />

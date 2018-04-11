@@ -12,6 +12,8 @@
 #include <assimp/postprocess.h>
 #include "Model.h"
 #include "Camera.h"
+#include "Floor.h"
+
 using namespace std;
 
 const GLuint WIDTH = 800, HEIGHT = 800;
@@ -206,7 +208,10 @@ int main()
 	glViewport(0, 0, width, height);
 
 	glEnable(GL_DEPTH_TEST);
-	//初始化并绑定shaders
+
+	//	glDepthMask(GL_FALSE);
+
+		//初始化并绑定shaders
 	shaderInit();
 	//初始化顶点对象数据
 	vertexObjectInit();
@@ -320,7 +325,7 @@ int main()
 		model = glm::translate(model, glm::vec3(moveR, moveU, moveF));
 		model = glm::scale(model, glm::vec3(0.2f));
 
-		model = glm::rotate(model, glm::radians(timeValue * 20), glm::vec3(moveR, 1.0f, moveF));
+		model = glm::rotate(model, glm::radians(timeValue * 20), glm::vec3(0, 1.0f, 0));
 
 		modelShader.setVec3("viewPos", mainCamera.Position);
 		modelShader.setVec3("spotLight.position", mainCamera.Position);
@@ -329,6 +334,14 @@ int main()
 		modelShader.setMat4("model", model);
 
 		nanoModel.Draw(modelShader);
+
+		//画地面
+		modelShader.use();
+		glm::mat4 floorMat(1.0f);
+		floorMat = glm::translate(floorMat, zeroPos);
+		floorMat = glm::scale(floorMat, glm::vec3(10.0f));
+		modelShader.setMat4("model", floorMat);
+		DrawFloor(&modelShader);
 
 		//灯光设置
 		lightShader.use();

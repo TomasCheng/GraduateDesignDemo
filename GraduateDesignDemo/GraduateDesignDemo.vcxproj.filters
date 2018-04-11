@@ -23,6 +23,9 @@
     <ClCompile Include="Model.cpp">
       <Filter>model</Filter>
     </ClCompile>
+    <ClCompile Include="Floor.cpp">
+      <Filter>floor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -39,6 +42,9 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="Floor.h">
+      <Filter>floor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +103,9 @@
     </Filter>
     <Filter Include="model">
       <UniqueIdentifier>{fd562af7-30c1-4ede-8bc6-cc2f0a85ea34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="floor">
+      <UniqueIdentifier>{a9c6bfed-0a27-4cfa-9421-39d81143dc86}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
