@@ -119,6 +119,14 @@ vec3 CalcSpotLight(SpotLight light, vec3 norm,vec3 fragPos,vec3 viewDir)
 	return result;
 }
 
+float near = 0.1; 
+float far  = 100.0;
+float LinearizeDepth(float depth) 
+{
+    float z = depth * 2.0 - 1.0; // back to NDC 
+    return (2.0 * near * far) / (far + near - z * (far - near));    
+}
+
 void main()
 {
     // 属性
@@ -136,6 +144,15 @@ void main()
     result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
 
     FragColor = vec4(result, 1.0);
-    //FragColor = vec4(vec3(texture(material.texture_diffuse0,TexCoords)), 1.0);
-    //FragColor = vec4(vec3(1.0f,0.0f,0.0f), 1.0);
+    
+	//FragColor = vec4(vec3(texture(material.texture_diffuse0,TexCoords)), 1.0);
+    
+	//FragColor = vec4(vec3(1.0f,0.0f,0.0f), 1.0);
+	
+	//深度缓冲可视化
+    //FragColor = vec4(vec3(gl_FragCoord.z), 1.0);
+	//深度缓冲线性化
+	//float depth = LinearizeDepth(gl_FragCoord.z) / far; // 为了演示除以 far
+    //FragColor = vec4(vec3(depth), 1.0);
+
 } 

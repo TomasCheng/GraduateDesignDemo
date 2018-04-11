@@ -6,9 +6,9 @@
 
 GLfloat floorVeterx[] = {
 	-1.0f,0.0f,-1.0f,  0.0f,1.0f,0.0f,  0.0f,0.0f,
-	1.0f,0.0f,-1.0f,  0.0f,1.0f,0.0f,  10.0f,0.0f,
-	1.0f,0.0f,1.0f,  0.0f,1.0f,0.0f,  10.0f,10.0f,
-	-1.0f,0.0f,1.0f,  0.0f,1.0f,0.0f,  0.0f,10.0f,
+	1.0f,0.0f,-1.0f,  0.0f,1.0f,0.0f,  4.0f,0.0f,
+	1.0f,0.0f,1.0f,  0.0f,1.0f,0.0f,  4.0f,6.0f,
+	-1.0f,0.0f,1.0f,  0.0f,1.0f,0.0f,  0.0f,6.0f,
 };
 GLuint floorindeies[] = {
 	0,1,2,
@@ -70,7 +70,7 @@ void FloorInit()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * 6, floorindeies, GL_STATIC_DRAW);
 	glBindVertexArray(0);
 
-	floorDiffuseMap = loadTexture("timg3.jpg", GL_REPEAT, GL_LINEAR);
+	floorDiffuseMap = loadTexture("timg4.jpg", GL_REPEAT, GL_LINEAR);
 	//	InitFloorDiffuse();
 }
 
