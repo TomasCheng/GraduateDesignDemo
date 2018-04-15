@@ -141,11 +141,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="Light.fs" />
-    <None Include="ModelShader.fs" />
-    <None Include="ModelShader.vs" />
-    <None Include="Shader.fs" />
-    <None Include="Shader.vs" />
+    <None Include="Light.frag" />
+    <None Include="ModelShader.frag" />
+    <None Include="ModelShader.vert" />
+    <None Include="Shader.frag" />
+    <None Include="Shader.vert" />
+    <None Include="SingleColorShader.frag" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />

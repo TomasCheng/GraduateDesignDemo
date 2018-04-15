@@ -61,8 +61,8 @@ void lightInit()
 
 void shaderInit()
 {
-	modelShader = Shader("Shader.vs", "Shader.fs");
-	lightShader = Shader("Shader.vs", "Light.fs");
+	modelShader = Shader("Shader.vert", "Shader.frag");
+	lightShader = Shader("Shader.vert", "Light.frag");
 }
 
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
@@ -290,6 +290,9 @@ int main()
 	//材质的设置
 	modelShader.setFloat("material.shininess", 32.0f);
 
+	//边框shader
+	Shader singleColorShader("Shader.vert", "SingleColorShader.frag");
+
 	//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
 	{
@@ -300,9 +303,15 @@ int main()
 		glfwPollEvents();
 		do_movement();
 
+		glEnable(GL_DEPTH_TEST);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
 		//渲染指令
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+		glStencilMask(0x00);
 
 		//设置根据时间变换的x，y偏移值，最终效果为圆周运动
 		GLfloat timeValue = glfwGetTime();
@@ -333,7 +342,15 @@ int main()
 		modelShader.setVec3("spotLight.direction", mainCamera.Front);
 		modelShader.setMat4("model", model);
 
-		nanoModel.Draw(modelShader);
+		//		nanoModel.Draw(modelShader);
+
+				//开启模板缓冲测试
+		//		glEnable(GL_DEPTH_TEST);
+
+		glEnable(GL_STENCIL_TEST);
+
+		glStencilFunc(GL_ALWAYS, 1, 0xff);
+		glStencilMask(0xff);
 
 		//箱子
 		glBindVertexArray(VAO);
@@ -350,6 +367,22 @@ int main()
 		modelShader.setMat4("model", boxMat);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
+		//通过画一个大一点的箱子，只留下边框
+		glBindVertexArray(VAO);
+		singleColorShader.use();
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xff);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+		singleColorShader.setMat4("view", view);
+		singleColorShader.setMat4("proj", proj);
+		boxMat = glm::scale(boxMat, glm::vec3(1.04f, 1.04f, 1.04f));
+		singleColorShader.setMat4("model", boxMat);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+
+		glStencilMask(0xff);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
 		//画地面
 		modelShader.use();
 		glm::mat4 floorMat(1.0f);
