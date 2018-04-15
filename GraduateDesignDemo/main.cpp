@@ -211,7 +211,7 @@ int main()
 
 	//	glDepthMask(GL_FALSE);
 
-		//初始化并绑定shaders
+	//初始化并绑定shaders
 	shaderInit();
 	//初始化顶点对象数据
 	vertexObjectInit();
@@ -224,6 +224,10 @@ int main()
 	lightShader.setVec3("lightColor", lightColor);
 
 	mainCamera = Camera();
+
+	//生成箱子物体的纹理
+	GLuint boxDiffuseMap = loadTexture("container2.jpg", GL_REPEAT, GL_LINEAR);
+	GLuint boxSpecularMap = loadTexture("container2_specular.jpg", GL_REPEAT, GL_LINEAR);
 
 	glm::vec3 pointLightPositions[] = {
 		glm::vec3(-6.0f, 1.5f, 0.0f),
@@ -316,9 +320,6 @@ int main()
 		modelShader.use();
 		modelShader.setMat4("view", view);
 		modelShader.setMat4("proj", proj);
-
-		glBindVertexArray(VAO);
-		//第一个立方体
 		modelShader.use();
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, zeroPos);
@@ -330,10 +331,24 @@ int main()
 		modelShader.setVec3("viewPos", mainCamera.Position);
 		modelShader.setVec3("spotLight.position", mainCamera.Position);
 		modelShader.setVec3("spotLight.direction", mainCamera.Front);
-
 		modelShader.setMat4("model", model);
 
 		nanoModel.Draw(modelShader);
+
+		//箱子
+		glBindVertexArray(VAO);
+		modelShader.use();
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, boxDiffuseMap);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, boxSpecularMap);
+		modelShader.setInt("material.texture_diffuse0", 0);
+		modelShader.setInt("material.texture_specular0", 1);
+		modelShader.setInt("", 0);
+		glm::mat4 boxMat(1.0f);
+		boxMat = glm::translate(boxMat, glm::vec3(1.0f, 0.501f, 2.0f));
+		modelShader.setMat4("model", boxMat);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//画地面
 		modelShader.use();
