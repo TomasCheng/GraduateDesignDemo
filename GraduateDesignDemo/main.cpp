@@ -13,7 +13,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Floor.h"
-
+#include "Grass.h"
 using namespace std;
 
 const GLuint WIDTH = 800, HEIGHT = 800;
@@ -61,8 +61,8 @@ void lightInit()
 
 void shaderInit()
 {
-	modelShader = Shader("Shader.vs", "Shader.fs");
-	lightShader = Shader("Shader.vs", "Light.fs");
+	modelShader = Shader("Shader.vert", "Shader.frag");
+	lightShader = Shader("Shader.vert", "Light.frag");
 }
 
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
@@ -286,6 +286,15 @@ int main()
 	//材质的设置
 	modelShader.setFloat("material.shininess", 32.0f);
 
+	vector<glm::vec3> vegetation;
+	vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+	vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+	vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+	vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+	vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+
+	Shader grassShader("Shader.vert", "GrassShader.frag");
+
 	//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
 	{
@@ -318,7 +327,7 @@ int main()
 		modelShader.setMat4("proj", proj);
 
 		glBindVertexArray(VAO);
-		//第一个立方体
+
 		modelShader.use();
 		glm::mat4 model(1.0f);
 		model = glm::translate(model, zeroPos);
@@ -334,6 +343,35 @@ int main()
 		modelShader.setMat4("model", model);
 
 		nanoModel.Draw(modelShader);
+
+		grassShader.use();
+
+		//画草
+		grassShader.setMat4("view", view);
+		grassShader.setMat4("proj", proj);
+
+		for (unsigned int i = 0; i < vegetation.size(); i++)
+		{
+			glm::mat4  model2(1.0f);
+			model2 = glm::translate(model2, vegetation[i]);
+			//面向摄像机
+			glm::vec3 va(0.0f, 0.0f, -1.0f);
+			glm::vec3 vb = normalize((mainCamera.Position - vegetation[i]));
+			float a = (dot(vb, va)) / (glm::sqrt(va.x*va.x + va.y*va.y + va.z*va.z) * glm::sqrt(vb.x*vb.x + vb.y* vb.y + vb.z* vb.z));
+
+			float b = glm::acos(a);
+			if (b < 0)
+			{
+				b = -b;
+			}
+
+			cout << "a:" << a << "	-b:" << -b << endl;
+
+			model2 = glm::rotate(model2, b, glm::vec3(0.0f, 1.0f, 0.0f));
+			grassShader.setMat4("model", model2);
+
+			Drawgrass(&grassShader, mainCamera);
+		}
 
 		//画地面
 		modelShader.use();

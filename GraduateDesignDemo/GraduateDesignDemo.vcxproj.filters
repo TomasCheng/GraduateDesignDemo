@@ -26,6 +26,9 @@
     <ClCompile Include="Floor.cpp">
       <Filter>floor</Filter>
     </ClCompile>
+    <ClCompile Include="Grass.cpp">
+      <Filter>floor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -44,6 +47,9 @@
       <Filter>model</Filter>
     </ClInclude>
     <ClInclude Include="Floor.h">
+      <Filter>floor</Filter>
+    </ClInclude>
+    <ClInclude Include="Grass.h">
       <Filter>floor</Filter>
     </ClInclude>
   </ItemGroup>
@@ -66,22 +72,28 @@
     <Image Include="matrix.jpg">
       <Filter>image</Filter>
     </Image>
+    <Image Include="grass.png">
+      <Filter>image</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="Shader.fs">
+    <None Include="Light.frag">
       <Filter>shader</Filter>
     </None>
-    <None Include="Shader.vs">
+    <None Include="ModelShader.frag">
       <Filter>shader</Filter>
     </None>
-    <None Include="Light.fs">
+    <None Include="ModelShader.vert">
       <Filter>shader</Filter>
     </None>
-    <None Include="ModelShader.vs">
+    <None Include="Shader.frag">
       <Filter>shader</Filter>
     </None>
-    <None Include="ModelShader.fs">
+    <None Include="Shader.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="GrassShader.frag">
       <Filter>shader</Filter>
     </None>
   </ItemGroup>

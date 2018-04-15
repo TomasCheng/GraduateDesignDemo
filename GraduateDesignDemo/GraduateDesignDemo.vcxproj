@@ -124,6 +124,7 @@
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="Grass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -134,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Floor.h" />
+    <ClInclude Include="Grass.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Shader.h" />
@@ -141,17 +143,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="Light.fs" />
-    <None Include="ModelShader.fs" />
-    <None Include="ModelShader.vs" />
-    <None Include="Shader.fs" />
-    <None Include="Shader.vs" />
+    <None Include="GrassShader.frag" />
+    <None Include="Light.frag" />
+    <None Include="ModelShader.frag" />
+    <None Include="ModelShader.vert" />
+    <None Include="Shader.frag" />
+    <None Include="Shader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />
     <Image Include="container2.jpg" />
     <Image Include="container2_specular.jpg" />
     <Image Include="face.jpg" />
+    <Image Include="grass.png" />
     <Image Include="matrix.jpg" />
     <Image Include="wall.jpg" />
   </ItemGroup>
