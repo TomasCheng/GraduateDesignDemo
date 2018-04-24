@@ -147,6 +147,8 @@
     <None Include="Light.frag" />
     <None Include="ModelShader.frag" />
     <None Include="ModelShader.vert" />
+    <None Include="RTTShader.frag" />
+    <None Include="RTTShader.vert" />
     <None Include="Shader.frag" />
     <None Include="Shader.vert" />
   </ItemGroup>

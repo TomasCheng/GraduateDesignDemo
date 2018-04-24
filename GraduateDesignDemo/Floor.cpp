@@ -14,7 +14,9 @@ GLuint floorindeies[] = {
 	0,1,2,
 	2,3,0
 };
+
 GLuint floorVAO;
+
 GLuint floorVBO;
 GLuint floorEBO;
 

@@ -96,6 +96,12 @@
     <None Include="GrassShader.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="RTTShader.vert">
+      <Filter>shader</Filter>
+    </None>
+    <None Include="RTTShader.frag">
+      <Filter>shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="image">

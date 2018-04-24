@@ -295,122 +295,188 @@ int main()
 
 	Shader grassShader("Shader.vert", "GrassShader.frag");
 
-	//让窗口接受输入并保持运行
+	GLuint framebuffer;
+	glGenFramebuffers(1, &framebuffer);
+	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+	// 生成纹理
+	glActiveTexture(GL_TEXTURE0);
+	unsigned int texColorBuffer;
+	glGenTextures(1, &texColorBuffer);
+	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// 将它附加到当前绑定的帧缓冲对象
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+
+	unsigned int rbo;
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
+
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	Shader rttShader = Shader("RTTShader.vert", "RTTShader.frag");
+
+	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//线框模式
+
+		//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
 	{
-		GLfloat currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
-		//检查事件
-		glfwPollEvents();
-		do_movement();
-
-		//渲染指令
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//设置根据时间变换的x，y偏移值，最终效果为圆周运动
-		GLfloat timeValue = glfwGetTime();
-		GLfloat offsetx = 2 * ((sin(timeValue) / 2) + 0.5);
-		GLfloat offsety = 2 * ((cos(timeValue) / 2) + 0.5);
-		dynamicLightPos.x = lightPos.x + offsetx;
-		dynamicLightPos.z = lightPos.z + offsety;
-
-		glm::mat4 view(1.0f);
-		view = mainCamera.GetViewMatrix();
-
-		glm::mat4 proj(1.0f);
-		proj = glm::perspective(mainCamera.Zoom * scrollSpeed, (float)(WIDTH / HEIGHT), 0.1f, 100.0f);
-
-		modelShader.use();
-		modelShader.setMat4("view", view);
-		modelShader.setMat4("proj", proj);
-
-		glBindVertexArray(VAO);
-
-		modelShader.use();
-		glm::mat4 model(1.0f);
-		model = glm::translate(model, zeroPos);
-		model = glm::translate(model, glm::vec3(moveR, moveU, moveF));
-		model = glm::scale(model, glm::vec3(0.2f));
-
-		model = glm::rotate(model, glm::radians(timeValue * 20), glm::vec3(0, 1.0f, 0));
-
-		modelShader.setVec3("viewPos", mainCamera.Position);
-		modelShader.setVec3("spotLight.position", mainCamera.Position);
-		modelShader.setVec3("spotLight.direction", mainCamera.Front);
-
-		modelShader.setMat4("model", model);
-
-		nanoModel.Draw(modelShader);
-
-		grassShader.use();
-
-		//画草
-		grassShader.setMat4("view", view);
-		grassShader.setMat4("proj", proj);
-
-		for (unsigned int i = 0; i < vegetation.size(); i++)
+		for (int count = 0; count < 2; count++)
 		{
-			glm::mat4  model2(1.0f);
-			model2 = glm::translate(model2, vegetation[i]);
-			//面向摄像机
-			glm::vec3 va(0.0f, 0.0f, -1.0f);
-			glm::vec3 vb = normalize((mainCamera.Position - vegetation[i]));
-			float a = (dot(vb, va)) / (glm::sqrt(va.x*va.x + va.y*va.y + va.z*va.z) * glm::sqrt(vb.x*vb.x + vb.y* vb.y + vb.z* vb.z));
-
-			float b = glm::acos(a);
-			if (b < 0)
+			if (count == 0)
 			{
-				b = -b;
+				//				glViewport(0, 0, width, height);
+
+				glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+			}
+			else
+			{
+				//				glViewport(0, 0, 10.0f, 10.0f);
+
+				glBindFramebuffer(GL_FRAMEBUFFER, 0);
 			}
 
-			cout << "a:" << a << "	-b:" << -b << endl;
+			GLfloat currentFrame = glfwGetTime();
+			deltaTime = currentFrame - lastFrame;
+			lastFrame = currentFrame;
+			//检查事件
+			glfwPollEvents();
+			do_movement();
 
-			model2 = glm::rotate(model2, b, glm::vec3(0.0f, 1.0f, 0.0f));
-			grassShader.setMat4("model", model2);
+			//渲染指令
+			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			Drawgrass(&grassShader, mainCamera);
-		}
+			//设置根据时间变换的x，y偏移值，最终效果为圆周运动
+			GLfloat timeValue = glfwGetTime();
+			GLfloat offsetx = 2 * ((sin(timeValue) / 2) + 0.5);
+			GLfloat offsety = 2 * ((cos(timeValue) / 2) + 0.5);
+			dynamicLightPos.x = lightPos.x + offsetx;
+			dynamicLightPos.z = lightPos.z + offsety;
 
-		//画地面
-		modelShader.use();
-		glm::mat4 floorMat(1.0f);
-		floorMat = glm::translate(floorMat, zeroPos);
-		floorMat = glm::scale(floorMat, glm::vec3(10.0f));
-		modelShader.setMat4("model", floorMat);
-		DrawFloor(&modelShader);
+			glm::mat4 view(1.0f);
+			view = mainCamera.GetViewMatrix();
 
-		//灯光设置
-		lightShader.use();
-		glBindVertexArray(lightVAO);
+			glm::mat4 proj(1.0f);
+			proj = glm::perspective(mainCamera.Zoom * scrollSpeed, (float)(WIDTH / HEIGHT), 0.1f, 100.0f);
 
-		for (const auto pointLightPosition : pointLightPositions)
-		{
+			modelShader.use();
+			modelShader.setMat4("view", view);
+			modelShader.setMat4("proj", proj);
+
+			glBindVertexArray(VAO);
+
+			modelShader.use();
+			glm::mat4 model(1.0f);
+			model = glm::translate(model, zeroPos);
+			model = glm::translate(model, glm::vec3(moveR, moveU, moveF));
+			model = glm::scale(model, glm::vec3(0.2f));
+
+			model = glm::rotate(model, glm::radians(timeValue * 20), glm::vec3(0, 1.0f, 0));
+
+			modelShader.setVec3("viewPos", mainCamera.Position);
+			modelShader.setVec3("spotLight.position", mainCamera.Position);
+			modelShader.setVec3("spotLight.direction", mainCamera.Front);
+
+			modelShader.setMat4("model", model);
+
+			nanoModel.Draw(modelShader);
+
+			grassShader.use();
+
+			//画草
+			grassShader.setMat4("view", view);
+			grassShader.setMat4("proj", proj);
+
+			for (unsigned int i = 0; i < vegetation.size(); i++)
+			{
+				glm::mat4  model2(1.0f);
+				model2 = glm::translate(model2, vegetation[i]);
+				//面向摄像机
+				glm::vec3 va(0.0f, 0.0f, -1.0f);
+				glm::vec3 vb = normalize((mainCamera.Position - vegetation[i]));
+				float a = (dot(vb, va)) / (glm::sqrt(va.x*va.x + va.y*va.y + va.z*va.z) * glm::sqrt(vb.x*vb.x + vb.y* vb.y + vb.z* vb.z));
+
+				float b = glm::acos(a);
+				if (b < 0)
+				{
+					b = -b;
+				}
+
+				//			cout << "a:" << a << "	-b:" << -b << endl;
+
+				model2 = glm::rotate(model2, b, glm::vec3(0.0f, 1.0f, 0.0f));
+				grassShader.setMat4("model", model2);
+
+				Drawgrass(&grassShader, mainCamera);
+			}
+
+			//画地面
+			modelShader.use();
+			glm::mat4 floorMat(1.0f);
+			floorMat = glm::translate(floorMat, zeroPos);
+			floorMat = glm::scale(floorMat, glm::vec3(10.0f));
+			modelShader.setMat4("model", floorMat);
+			DrawFloor(&modelShader);
+
+			//灯光设置
+			lightShader.use();
+			glBindVertexArray(lightVAO);
+
+			for (const auto pointLightPosition : pointLightPositions)
+			{
+				glm::mat4 lightModel(1.0f);
+				lightModel = glm::translate(lightModel, pointLightPosition);
+				lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+				lightShader.setMat4("model", lightModel);
+				lightShader.setMat4("view", view);
+				lightShader.setMat4("proj", proj);
+
+				lightShader.setVec3("lightColor", lightColor);
+
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			}
+
+			//画原点
+			glBindVertexArray(lightVAO);
 			glm::mat4 lightModel(1.0f);
-			lightModel = glm::translate(lightModel, pointLightPosition);
-			lightModel = glm::scale(lightModel, glm::vec3(0.2f));
+			lightModel = glm::translate(lightModel, zeroPos);
+			lightModel = glm::scale(lightModel, glm::vec3(0.1f));
 			lightShader.setMat4("model", lightModel);
 			lightShader.setMat4("view", view);
 			lightShader.setMat4("proj", proj);
 
-			lightShader.setVec3("lightColor", lightColor);
+			lightShader.setVec3("lightColor", glm::vec3(1.0f, 0.0f, 0.0f));
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
+
+			if (count == 1)
+			{
+				//第二次的始化画箱子，将整个场景作为箱子的纹理
+				glBindVertexArray(VAO);
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+				glm::mat4 rttModel(1.0f);
+				rttModel = glm::translate(rttModel, glm::vec3(1.0f, 5.0f, 1.0f));
+				rttModel = glm::scale(rttModel, glm::vec3(10.0f, 10.0f, 1.0f));
+				rttShader.use();
+				rttShader.setMat4("model", rttModel);
+				rttShader.setMat4("view", view);
+				rttShader.setMat4("proj", proj);
+				rttShader.setInt("screenTexture", 0);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+			}
 		}
-
-		//画原点
-		glBindVertexArray(lightVAO);
-		glm::mat4 lightModel(1.0f);
-		lightModel = glm::translate(lightModel, zeroPos);
-		lightModel = glm::scale(lightModel, glm::vec3(0.1f));
-		lightShader.setMat4("model", lightModel);
-		lightShader.setMat4("view", view);
-		lightShader.setMat4("proj", proj);
-
-		lightShader.setVec3("lightColor", glm::vec3(1.0f, 0.0f, 0.0f));
-
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//交换缓冲
 		glfwSwapBuffers(window);
