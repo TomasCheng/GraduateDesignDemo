@@ -52,6 +52,9 @@
     <ClInclude Include="Grass.h">
       <Filter>floor</Filter>
     </ClInclude>
+    <ClInclude Include="CubeMap.h">
+      <Filter>cubeMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
@@ -102,6 +105,12 @@
     <None Include="RTTShader.frag">
       <Filter>shader</Filter>
     </None>
+    <None Include="cubeMapShader.vert">
+      <Filter>cubeMap</Filter>
+    </None>
+    <None Include="cubeMapShader.frag">
+      <Filter>cubeMap</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="image">
@@ -124,6 +133,9 @@
     </Filter>
     <Filter Include="floor">
       <UniqueIdentifier>{a9c6bfed-0a27-4cfa-9421-39d81143dc86}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="cubeMap">
+      <UniqueIdentifier>{59102dd7-999a-4013-9524-324f9a831b7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

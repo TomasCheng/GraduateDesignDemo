@@ -14,6 +14,7 @@
 #include "Camera.h"
 #include "Floor.h"
 #include "Grass.h"
+#include "CubeMap.h"
 using namespace std;
 
 const GLuint WIDTH = 800, HEIGHT = 800;
@@ -327,7 +328,12 @@ int main()
 
 	//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//线框模式
 
-		//让窗口接受输入并保持运行
+	//天空盒
+	Shader cubeMapShader = Shader("cubeMapShader.vert", "cubeMapShader.frag");
+
+	glDepthFunc(GL_LEQUAL);
+
+	//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
 	{
 		for (int count = 0; count < 2; count++)
@@ -475,7 +481,18 @@ int main()
 				rttShader.setInt("screenTexture", 0);
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 			}
+
+			//画天空盒
+			cubeMapShader.use();
+			glm::mat4 m(1.0f);
+			m = glm::scale(m, glm::vec3(10));
+			glm::mat4 view2 = glm::mat4(glm::mat3(view));
+			cubeMapShader.setMat4("view", view2);
+			cubeMapShader.setMat4("proj", proj);
+			cubeMapShader.setMat4("model", m);
+			DrawCubeMap();
 		}
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//交换缓冲
