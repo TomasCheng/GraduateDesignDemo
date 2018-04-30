@@ -89,6 +89,12 @@ void InitCubeMap()
 	faces.push_back("bottom.jpg");
 	faces.push_back("back.jpg");
 	faces.push_back("front.jpg");
+	//	faces.push_back("ame_siege/siege_rt.tga");
+	//	faces.push_back("ame_siege/siege_lt.tga");
+	//	faces.push_back("ame_siege/siege_up.tga");
+	//	faces.push_back("ame_siege/siege_dn.tga");
+	//	faces.push_back("ame_siege/siege_bk.tga");
+	//	faces.push_back("ame_siege/siege_ft.tga");
 	cubemapTexture = loadCubemap(faces);
 
 	glGenVertexArrays(1, &cubeMapVAO);
