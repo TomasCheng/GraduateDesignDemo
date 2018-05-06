@@ -20,7 +20,7 @@ enum Camera_Movement {
 // Default camera values
 const GLfloat YAW = 0.0f;
 const GLfloat PITCH = 0.0f;
-const GLfloat SPEED = 3.0f;
+const GLfloat SPEED = 15.0f;
 const GLfloat SENSITIVTY = 0.25f;
 const GLfloat ZOOM = 25.0f;
 
@@ -41,6 +41,18 @@ public:
 	GLfloat MovementSpeed;
 	GLfloat MouseSensitivity;
 	GLfloat Zoom;
+
+	glm::mat4 proj;
+
+	void UpdateProj(glm::mat4 p)
+	{
+		proj = p;
+	}
+
+	glm::mat4 GetProj()
+	{
+		return proj;
+	}
 
 	// Constructor with vectors
 	Camera(glm::vec3 position = glm::vec3(0.0f, 1.0f, -3.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), GLfloat yaw = YAW, GLfloat pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVTY), Zoom(ZOOM)

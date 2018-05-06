@@ -14,12 +14,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>camera</Filter>
     </ClCompile>
-    <ClCompile Include="Utils.cpp">
-      <Filter>util</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>model</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>model</Filter>
     </ClCompile>
@@ -28,6 +22,60 @@
     </ClCompile>
     <ClCompile Include="Grass.cpp">
       <Filter>floor</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>log</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>material</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureCube.cpp">
+      <Filter>texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneNode.cpp">
+      <Filter>scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceLoader.cpp">
+      <Filter>Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="CircleMesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeMesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneMesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="QuardMesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SphereMesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Torus.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="MD5.cpp">
+      <Filter>util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -40,9 +88,6 @@
     <ClInclude Include="Camera.h">
       <Filter>camera</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>model</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>model</Filter>
     </ClInclude>
@@ -54,6 +99,75 @@
     </ClInclude>
     <ClInclude Include="CubeMap.h">
       <Filter>cubeMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>log</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>material</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderTypes.h">
+      <Filter>shader</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureCube.h">
+      <Filter>texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneNode.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderLoader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureLoader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceLoader.h">
+      <Filter>Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="CircleMesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeMesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaneMesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="QuardMesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SphereMesh.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Torus.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Math.h">
+      <Filter>util</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>Light</Filter>
+    </ClInclude>
+    <ClInclude Include="MD5.h">
+      <Filter>util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -81,35 +195,44 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="Light.frag">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="ModelShader.frag">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="ModelShader.vert">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="Shader.frag">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="Shader.vert">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="GrassShader.frag">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="RTTShader.vert">
-      <Filter>shader</Filter>
-    </None>
-    <None Include="RTTShader.frag">
-      <Filter>shader</Filter>
-    </None>
     <None Include="cubeMapShader.vert">
       <Filter>cubeMap</Filter>
     </None>
     <None Include="cubeMapShader.frag">
       <Filter>cubeMap</Filter>
+    </None>
+    <None Include="GrassShader.frag">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="Light.frag">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="ModelShader.frag">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="ModelShader.vert">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="RTTShader.frag">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="RTTShader.vert">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="Shader.frag">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="Shader.vert">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="DefaultFragShader.frag">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="DefaultVertShader.vert">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="commom\Commom.glsl">
+      <Filter>resource</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +259,30 @@
     </Filter>
     <Filter Include="cubeMap">
       <UniqueIdentifier>{59102dd7-999a-4013-9524-324f9a831b7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="material">
+      <UniqueIdentifier>{de2a1bdd-f4aa-41f7-a5eb-216274466cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{a52001f6-b665-4ab4-ac6c-3bbe1f1b5a1a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="texture">
+      <UniqueIdentifier>{2c89788a-f79c-46a5-b2b8-096c874df5a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resource">
+      <UniqueIdentifier>{57f51a6d-2940-48e9-bf6f-578f30e7eb84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mesh">
+      <UniqueIdentifier>{cd1e7fbe-7e2a-4a51-b5b3-eca1c879eb6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="log">
+      <UniqueIdentifier>{f231ec5c-232d-4987-b863-cbb2b1ef20d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loader">
+      <UniqueIdentifier>{96eb26b5-b13f-475b-badc-7da32fbeff92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Light">
+      <UniqueIdentifier>{1f5fde3c-14b7-464e-808e-ea82b7a757ae}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

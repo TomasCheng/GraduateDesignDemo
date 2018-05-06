@@ -82,10 +82,10 @@ void Drawgrass(Shader *shader, Camera mainCamera)
 		isgrassInit = true;
 	}
 	glBindVertexArray(grassVAO);
-	shader->use();
+	shader->Use();
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, grassDiffuseMap);
-	shader->setInt("texture_diffuse1", 0);
+	shader->SetInt("texture_diffuse1", 0);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 

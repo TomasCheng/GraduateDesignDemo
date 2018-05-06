@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -123,29 +123,70 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CircleMesh.cpp" />
+    <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="Floor.cpp" />
     <ClCompile Include="Grass.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MD5.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PlaneMesh.cpp" />
+    <ClCompile Include="QuardMesh.cpp" />
+    <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderLoader.cpp" />
+    <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="stb_image_define.cpp" />
-    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureCube.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="Torus.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CircleMesh.h" />
     <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="CubeMesh.h" />
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="Floor.h" />
     <ClInclude Include="Grass.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Math.h" />
+    <ClInclude Include="MD5.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="PlaneMesh.h" />
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="QuardMesh.h" />
+    <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderLoader.h" />
+    <ClInclude Include="ShaderTypes.h" />
+    <ClInclude Include="SphereMesh.h" />
+    <ClInclude Include="SpotLight.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureCube.h" />
+    <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Torus.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="commom\Commom.glsl" />
     <None Include="cubeMapShader.frag" />
     <None Include="cubeMapShader.vert" />
+    <None Include="DefaultFragShader.frag" />
+    <None Include="DefaultVertShader.vert" />
     <None Include="GrassShader.frag" />
     <None Include="Light.frag" />
     <None Include="ModelShader.frag" />

@@ -84,11 +84,11 @@ void DrawFloor(Shader *shader)
 		isFloorInit = true;
 	}
 	glBindVertexArray(floorVAO);
-	shader->use();
+	shader->Use();
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, floorDiffuseMap);
-	shader->setInt("material.texture_diffuse0", 0);
-	shader->setInt("material.texture_specular0", 0);
+	shader->SetInt("material.texture_diffuse0", 0);
+	shader->SetInt("material.texture_specular0", 0);
 
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
