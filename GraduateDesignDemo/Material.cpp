@@ -105,8 +105,8 @@ Material Material::Copy()
 	copy.BlendDst = BlendDst;
 	copy.BlendEquation = BlendEquation;
 
-	copy.m_Uniforms = m_Uniforms;
-	copy.m_SamplerUniforms = m_SamplerUniforms;
+	copy.m_Uniforms = (m_Uniforms);
+	copy.m_SamplerUniforms = (m_SamplerUniforms);
 
 	return copy;
 }

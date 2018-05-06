@@ -77,6 +77,9 @@
     <ClCompile Include="MD5.cpp">
       <Filter>util</Filter>
     </ClCompile>
+    <ClCompile Include="TextRender.cpp">
+      <Filter>text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -169,6 +172,9 @@
     <ClInclude Include="MD5.h">
       <Filter>util</Filter>
     </ClInclude>
+    <ClInclude Include="TextRender.h">
+      <Filter>text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg">
@@ -234,6 +240,12 @@
     <None Include="commom\Commom.glsl">
       <Filter>resource</Filter>
     </None>
+    <None Include="TextShader.vert">
+      <Filter>text</Filter>
+    </None>
+    <None Include="TextShader.frag">
+      <Filter>text</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="image">
@@ -283,6 +295,9 @@
     </Filter>
     <Filter Include="Light">
       <UniqueIdentifier>{1f5fde3c-14b7-464e-808e-ea82b7a757ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="text">
+      <UniqueIdentifier>{e8b805f2-0847-4936-bc82-b49d64808995}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

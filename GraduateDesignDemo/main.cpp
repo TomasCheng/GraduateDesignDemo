@@ -23,6 +23,7 @@
 #include "Torus.h"
 #include "SphereMesh.h"
 #include "PlaneMesh.h"
+#include "TextRender.h"
 using namespace std;
 
 const GLuint WIDTH = 1920, HEIGHT = 1080;
@@ -326,15 +327,33 @@ int main()
 	glDepthFunc(GL_LEQUAL);
 
 	DirectionalLight* directional_light = new DirectionalLight();
+	directional_light->Color = glm::vec3(0.5);
 	Scene::AddLight(directional_light);
+
+	PointLight* pointLight = new PointLight();
+	pointLight->Color = glm::vec3(1);
+	pointLight->Position = glm::vec3(0, 1, 0);
+	Scene::AddLight(pointLight);
+
+	PointLight* pointLight2 = new PointLight();
+	pointLight2->Color = glm::vec3(1, 0, 0);
+	pointLight2->Position = glm::vec3(10, 1, 0);
+	Scene::AddLight(pointLight2);
 
 	Scene::Init();
 
-	//	Shader* shader = ResourceLoader::LoadShader("test");
-	//	material* material = new material(shader);
-	//	mesh* mesh = new Sphere(64, 64);
-	//	SceneNode* node = Scene::MakeSceneNode(mesh, material);
-	//	node->SetPosition(glm::vec3(2, 0, 0));
+	TextRender::Init(WIDTH, HEIGHT);
+
+	Shader* shader = ResourceLoader::LoadShader("test");
+	Material* material = new Material(shader);
+	Mesh* mesh = new Cube;
+	SceneNode* node = new SceneNode(mesh, material);
+	material->SetVector("MainColor", glm::vec3(1.0));
+	Texture* defaultTexAlbedo = ResourceLoader::LoadTexture("default", "container2.jpg");
+	Texture* defaultTexMetallic = ResourceLoader::LoadTexture("default", "container2_specular.jpg");
+	material->SetTexture("TexAlbedo", defaultTexAlbedo, 0);
+	material->SetTexture("TexMetallic", defaultTexMetallic, 2);
+	node->SetPosition(glm::vec3(2, 2, 0));
 	//
 	//	mesh* plane = new Plane(16, 16);
 	//	material* material2 = new material(shader);
@@ -346,28 +365,37 @@ int main()
 
 	Shader* s1 = ResourceLoader::LoadShader("floor");
 	Material* m1 = new Material(s1);
-
 	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
 	m1->SetTexture("TexAlbedo", t1, 0);
+	m1->SetTexture("TexMetallic", defaultTexMetallic, 2);
+
 	m1->SetVector("MainColor", glm::vec3(1.0));
 
 	Mesh* mesh1 = new Plane(1, 1);
 	SceneNode* n1 = new SceneNode(mesh1, m1);
-	n1->SetPosition(glm::vec3(0, 0, 0));
+	n1->SetPosition(glm::vec3(-1, 0, 0));
 	n1->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
 	n1->SetScale(glm::vec3(65, 1, 65));
-	//	Scene::AddChild(n1);
 
-	for (int i = 0; i < 10; i++)
-	{
-		SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
+	//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
+	//
+	//	n2->SetPosition(glm::vec3(0, 0, 0));
 
-		n2->SetPosition(glm::vec3(2 * i, 0, 0));
-	}
-	//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/sponza/sponza.obj");
-	//	n2->SetScale(0.01f);
-//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
-	//	Scene::AddChild(n2);
+		//	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
+		//	n3->SetPosition(glm::vec3(300, 0, 0));
+		//	n3->SetScale(0.1f);
+
+	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
+	//	n4->SetPosition(glm::vec3(0, 0, 4));
+		//	Scene::AddChild(n2);
+
+		//再分成2个场景
+		//运动的三个聚光灯
+	SpotLight* spot0 = new SpotLight();
+	spot0->Position = glm::vec3(0, 1, 1);
+	spot0->Direction = glm::vec3(0, -1, -1);
+	spot0->Color = glm::vec3(1, 1, 1);
+	//	Scene::AddLight(spot0);
 
 	TextureCube* skybox = ResourceLoader::LoadTextureCube("skybox", "");
 	Scene::SetSkyBox(skybox);
@@ -417,131 +445,14 @@ int main()
 
 		Scene::mainCamera->UpdateProj(proj);
 
-		//		material->SetMatrix("view", view);
-		//		material->SetMatrix("proj", proj);
-				//		material->SetMatrix("model", glm::mat4(1.0));
-				//
-				//		material2->SetMatrix("model", glm::translate(glm::mat4(1.0), glm::vec3(2, 0, 0)));
+		spot0->Position = Scene::mainCamera->Position;
+		spot0->Direction = Scene::mainCamera->Front;
 
 		Scene::Update();
 
-		//			modelShader.use();
-		//			modelShader.setMat4("view", view);
-		//			modelShader.setMat4("proj", proj);
-		//
-		//			glBindVertexArray(VAO);
-		//
-		//			modelShader.use();
-		//			glm::mat4 model(1.0f);
-		//			model = glm::translate(model, zeroPos);
-		//			model = glm::translate(model, glm::vec3(moveR, moveU, moveF));
-		//			model = glm::scale(model, glm::vec3(0.2f));
-		//
-		//			model = glm::rotate(model, glm::radians(timeValue * 20), glm::vec3(0, 1.0f, 0));
-		//
-		//			modelShader.setVec3("viewPos", mainCamera.Position);
-		//			modelShader.setVec3("spotLight.position", mainCamera.Position);
-		//			modelShader.setVec3("spotLight.direction", mainCamera.Front);
-		//
-		//			modelShader.setMat4("model", model);
-		//
-		//			nanoModel.Draw(modelShader);
-		//
-		//			grassShader.use();
-		//
-		//			//画草
-		//			grassShader.setMat4("view", view);
-		//			grassShader.setMat4("proj", proj);
-		//
-		//			for (unsigned int i = 0; i < vegetation.size(); i++)
-		//			{
-		//				glm::mat4  model2(1.0f);
-		//				model2 = glm::translate(model2, vegetation[i]);
-		//				//面向摄像机
-		//				glm::vec3 va(0.0f, 0.0f, -1.0f);
-		//				glm::vec3 vb = normalize((mainCamera.Position - vegetation[i]));
-		//				float a = (dot(vb, va)) / (glm::sqrt(va.x*va.x + va.y*va.y + va.z*va.z) * glm::sqrt(vb.x*vb.x + vb.y* vb.y + vb.z* vb.z));
-		//
-		//				float b = glm::acos(a);
-		//				if (b < 0)
-		//				{
-		//					b = -b;
-		//				}
-		//
-		//				//			cout << "a:" << a << "	-b:" << -b << endl;
-		//
-		//				model2 = glm::rotate(model2, b, glm::vec3(0.0f, 1.0f, 0.0f));
-		//				grassShader.setMat4("model", model2);
-		//
-		//				Drawgrass(&grassShader, mainCamera);
-		//			}
-		//
-		//			//画地面
-		//			modelShader.use();
-		//			glm::mat4 floorMat(1.0f);
-		//			floorMat = glm::translate(floorMat, zeroPos);
-		//			floorMat = glm::scale(floorMat, glm::vec3(10.0f));
-		//			modelShader.setMat4("model", floorMat);
-		//			DrawFloor(&modelShader);
-		//
-		//			//灯光设置
-		//			lightShader.use();
-		//			glBindVertexArray(lightVAO);
-		//
-		//			for (const auto pointLightPosition : pointLightPositions)
-		//			{
-		//				glm::mat4 lightModel(1.0f);
-		//				lightModel = glm::translate(lightModel, pointLightPosition);
-		//				lightModel = glm::scale(lightModel, glm::vec3(0.2f));
-		//				lightShader.setMat4("model", lightModel);
-		//				lightShader.setMat4("view", view);
-		//				lightShader.setMat4("proj", proj);
-		//
-		//				lightShader.setVec3("lightColor", lightColor);
-		//
-		//				glDrawArrays(GL_TRIANGLES, 0, 36);
-		//			}
-		//
-		//			//画原点
-		//			glBindVertexArray(lightVAO);
-		//			glm::mat4 lightModel(1.0f);
-		//			lightModel = glm::translate(lightModel, zeroPos);
-		//			lightModel = glm::scale(lightModel, glm::vec3(0.1f));
-		//			lightShader.setMat4("model", lightModel);
-		//			lightShader.setMat4("view", view);
-		//			lightShader.setMat4("proj", proj);
-		//
-		//			lightShader.setVec3("lightColor", glm::vec3(1.0f, 0.0f, 0.0f));
-		//
-		//			glDrawArrays(GL_TRIANGLES, 0, 36);
-		//
-		//			if (count == 1)
-		//			{
-		//				//第二次的始化画箱子，将整个场景作为箱子的纹理
-		//				glBindVertexArray(VAO);
-		//				glActiveTexture(GL_TEXTURE0);
-		//				glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-		//				glm::mat4 rttModel(1.0f);
-		//				rttModel = glm::translate(rttModel, glm::vec3(1.0f, 5.0f, 1.0f));
-		//				rttModel = glm::scale(rttModel, glm::vec3(10.0f, 10.0f, 1.0f));
-		//				rttShader.use();
-		//				rttShader.setMat4("model", rttModel);
-		//				rttShader.setMat4("view", view);
-		//				rttShader.setMat4("proj", proj);
-		//				rttShader.setInt("screenTexture", 0);
-		//				glDrawArrays(GL_TRIANGLES, 0, 6);
-		//			}
-		//
-		//			//画天空盒
-		//			cubeMapShader.use();
-		//			glm::mat4 m(1.0f);
-		//			m = glm::scale(m, glm::vec3(10));
-		//			glm::mat4 view2 = glm::mat4(glm::mat3(view));
-		//			cubeMapShader.setMat4("view", view2);
-		//			cubeMapShader.setMat4("proj", proj);
-		//			cubeMapShader.setMat4("model", m);
-		//			DrawCubeMap();
-		//		}
+		double fps = 1.0f / deltaTime;
+		fps = ((double)((int)((fps + 0.005) * 100))) / 100;
+		TextRender::Render("FPS:" + to_string(fps), WIDTH - 200, HEIGHT - 30, 0.5, glm::vec3(1, 0.0f, 0.0f));
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

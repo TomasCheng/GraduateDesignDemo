@@ -142,6 +142,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 norm,vec3 fragPos,vec3 viewDir)
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = light.specular * spec * vec3(texture(TexMetallic,TexCoords));  
 
+//    vec3 result = ambient + diffuse * intensity + specular * intensity;
     vec3 result = ambient + diffuse * intensity + specular * intensity;
 	return result;
 }
@@ -185,6 +186,7 @@ void main()
     vec3 viewDir = normalize(viewPos - FragPos);
 
 	vec3 result  = vec3(0);
+
     // 第一阶段：定向光照
 	for(int i=0;i<dirLightCount;i++){
 		result += CalcDirLight(dirLights[i], norm, viewDir);
@@ -198,7 +200,10 @@ void main()
 	for(int i=0;i<spotLightCount;i++){
 		result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);
 	}
-
-    FragColor = vec4(result * MainColor, 1.0);
-	//FragColor = vec4(1,0,0,1);
+	if(dirLightCount==0 && pointLightCount==0 && spotLightCount==0){
+		FragColor = vec4(vec3(0.6f),1);
+	}else{
+		FragColor = vec4((result * MainColor), 1.0);
+	}
+	//FragColor = vec4(viewPos,1);
 } 

@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\Y_Study\My\2018GraduateDesign\Lib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Y_Study\My\2018GraduateDesign\Lib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Lib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Lib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -81,7 +81,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -143,6 +143,7 @@
     <ClCompile Include="ShaderLoader.cpp" />
     <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="stb_image_define.cpp" />
+    <ClCompile Include="TextRender.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureCube.cpp" />
     <ClCompile Include="TextureLoader.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="SphereMesh.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="stb_image.h" />
+    <ClInclude Include="TextRender.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureCube.h" />
     <ClInclude Include="TextureLoader.h" />
@@ -195,6 +197,8 @@
     <None Include="RTTShader.vert" />
     <None Include="Shader.frag" />
     <None Include="Shader.vert" />
+    <None Include="TextShader.frag" />
+    <None Include="TextShader.vert" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="container.jpg" />

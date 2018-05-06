@@ -4,6 +4,7 @@
 #include "CubeMesh.h"
 #include "ResourceLoader.h"
 #include "iostream"
+#include "TextRender.h"
 
 SceneNode* Scene::Root = new SceneNode(nullptr);
 //unsigned int Scene::CounterID = 0;
@@ -148,10 +149,10 @@ void Scene::Init()
 	glUniformBlockBinding(defaultShader->ID, lights_index, 0);
 
 	Scene::defaultMaterial = new Material(defaultShader);
-	Texture* defaultTexAlbedo = ResourceLoader::LoadTexture("default", "timg.jpg");
-	Texture* defaultTexMetallic = ResourceLoader::LoadTexture("default", "timg.jpg");
-	defaultMaterial->SetTexture("TexAlbedo", defaultTexAlbedo, 0);
-	defaultMaterial->SetTexture("TexMetallic", defaultTexMetallic, 2);
+	//	Texture* defaultTexAlbedo = ResourceLoader::LoadTexture("default", "timg.jpg");
+	//	Texture* defaultTexMetallic = ResourceLoader::LoadTexture("default", "timg.jpg");
+	//	defaultMaterial->SetTexture("TexAlbedo", defaultTexAlbedo, 0);
+	//	defaultMaterial->SetTexture("TexMetallic", defaultTexMetallic, 2);
 	defaultMaterial->SetVector("MainColor", glm::vec3(1));
 
 	UpdateUboData();
@@ -181,9 +182,11 @@ void Scene::AddLight(SpotLight* light)
 
 Material* Scene::GetDefaultMaterialCopy()
 {
-	//	return &defaultMaterial->Copy();
+	Material defaultMatCopy = defaultMaterial->Copy();
+	Material* mat = new Material(defaultMatCopy);
+	return mat;
 
-	return  defaultMaterial;
+	//	return  defaultMaterial;
 }
 
 void Scene::PrintNodeTree(SceneNode* root, int depth)
@@ -214,7 +217,7 @@ void Scene::UpdateUboData()
 	int mat4Size = 64;
 	int vec3Size = 16;
 	int floatSize = 16;
-	int intSize = 16;
+	int intSize = 4;
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, mat4Size, &mainCamera->proj[0][0]); // sizeof(glm::mat4) = 64 bytes
 	glm::mat4 view = mainCamera->GetViewMatrix();
 	glBufferSubData(GL_UNIFORM_BUFFER, mat4Size, mat4Size, &view[0][0]);
@@ -243,8 +246,8 @@ void Scene::UpdateUboData()
 	start += 9 * vec3Size;
 	for (unsigned int i = 0; i < m_SpotLights.size() && i < 3; ++i)
 	{
-		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start, 16, &m_SpotLights[i]->CutOff);
-		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start + floatSize, 16, &m_SpotLights[i]->OuterCutOff);
+		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start, 4, &m_SpotLights[i]->CutOff);
+		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start + floatSize * 3, 4, &m_SpotLights[i]->OuterCutOff);
 	}
 	start += 6 * floatSize;
 	int dirLightCount = m_DirectionalLights.size();
@@ -254,7 +257,7 @@ void Scene::UpdateUboData()
 	glBufferSubData(GL_UNIFORM_BUFFER, start + intSize, sizeof(int), &pointLightCount);
 	glBufferSubData(GL_UNIFORM_BUFFER, start + 2 * intSize, sizeof(int), &spotLightCount);
 
-	start += 3 * intSize;
+	start += 4 * intSize;
 	for (unsigned int i = 0; i < m_PointLights.size() && i < 8; ++i)
 	{
 		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start, 4, &m_PointLights[i]->Radius);
