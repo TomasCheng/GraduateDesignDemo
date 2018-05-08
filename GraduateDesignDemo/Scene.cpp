@@ -5,6 +5,7 @@
 #include "ResourceLoader.h"
 #include "iostream"
 #include "TextRender.h"
+#include "SphereMesh.h"
 
 SceneNode* Scene::Root = new SceneNode(nullptr);
 //unsigned int Scene::CounterID = 0;
@@ -17,7 +18,7 @@ Material* Scene::defaultMaterial = nullptr;
 std::vector<DirectionalLight*> Scene::m_DirectionalLights = vector<DirectionalLight*>();
 std::vector<PointLight*>       Scene::m_PointLights = vector<PointLight*>();
 std::vector<SpotLight*>       Scene::m_SpotLights = vector<SpotLight*>();
-
+ISoundEngine* Scene::SoundPlayer = nullptr;
 // --------------------------------------------------------------------------------------------
 void Scene::Clear()
 {
@@ -108,6 +109,7 @@ void Scene::Render()
 	{
 		render(Scene::Root);
 	}
+
 	if (Scene::skyboxSceneNode != nullptr)
 	{
 		//渲染天空盒
@@ -156,6 +158,9 @@ void Scene::Init()
 	defaultMaterial->SetVector("MainColor", glm::vec3(1));
 
 	UpdateUboData();
+
+	//初始化音频播放器
+	SoundPlayer = createIrrKlangDevice();
 }
 
 void Scene::Update()
@@ -173,11 +178,33 @@ void Scene::AddLight(DirectionalLight* light)
 void Scene::AddLight(PointLight* light)
 {
 	m_PointLights.push_back(light);
+	if (light->RenderMesh)
+	{
+		//添加一个球体，颜色为光的颜色
+		Mesh* mesh = new Sphere;
+		Shader* lightShader = ResourceLoader::LoadShader("PointLight", "DefaultVertShader.vert", "Light.frag");
+		Material* mat = new Material(lightShader);
+		mat->SetVector("lightColor", light->Color);
+		SceneNode* node = new SceneNode(mesh, mat);
+		node->SetPosition(light->Position);
+		node->SetScale(light->Radius / 4.0);
+	}
 }
 
 void Scene::AddLight(SpotLight* light)
 {
 	m_SpotLights.push_back(light);
+	if (light->RenderMesh)
+	{
+		//添加一个球体，颜色为光的颜色
+		Mesh* mesh = new Sphere;
+		Shader* lightShader = ResourceLoader::LoadShader("PointLight", "DefaultVertShader.vert", "Light.frag");
+		Material* mat = new Material(lightShader);
+		mat->SetVector("lightColor", light->Color);
+		SceneNode* node = new SceneNode(mesh, mat);
+		node->SetPosition(light->Position);
+		node->SetScale(1.0 / 4.0);
+	}
 }
 
 Material* Scene::GetDefaultMaterialCopy()
@@ -228,26 +255,26 @@ void Scene::UpdateUboData()
 	for (unsigned int i = 0; i < m_DirectionalLights.size() && i < 4; ++i) // no more than 4 directional lights
 	{
 		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start, vec3Size, &m_DirectionalLights[i]->Direction[0]);
-		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start + 4 * vec3Size, vec3Size, &m_DirectionalLights[i]->Color[0]);
+		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start + 4 * vec3Size, vec3Size, &(m_DirectionalLights[i]->Color* m_DirectionalLights[i]->Intensity)[0]);
 	}
 	start += 8 * vec3Size;
 	for (unsigned int i = 0; i < m_PointLights.size() && i < 8; ++i) //  constrained to max 8 point lights in forward context
 	{
 		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start, vec3Size, &m_PointLights[i]->Position[0]);
-		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start + 8 * vec3Size, vec3Size, &m_PointLights[i]->Color[0]);
+		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start + 8 * vec3Size, vec3Size, &(m_PointLights[i]->Color*m_PointLights[i]->Intensity)[0]);
 	}
 	start += 16 * vec3Size;
 	for (unsigned int i = 0; i < m_SpotLights.size() && i < 3; ++i) //
 	{
 		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start, vec3Size, &m_SpotLights[i]->Position[0]);
 		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start + 3 * vec3Size, vec3Size, &m_SpotLights[i]->Direction[0]);
-		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start + 6 * vec3Size, vec3Size, &m_SpotLights[i]->Color[0]);
+		glBufferSubData(GL_UNIFORM_BUFFER, i * vec3Size + start + 6 * vec3Size, vec3Size, &(m_SpotLights[i]->Color*m_SpotLights[i]->Intensity)[0]);
 	}
 	start += 9 * vec3Size;
 	for (unsigned int i = 0; i < m_SpotLights.size() && i < 3; ++i)
 	{
-		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start, 4, &m_SpotLights[i]->CutOff);
-		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start + floatSize * 3, 4, &m_SpotLights[i]->OuterCutOff);
+		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start, 16, &m_SpotLights[i]->CutOff);
+		glBufferSubData(GL_UNIFORM_BUFFER, i * floatSize + start + floatSize * 3, 16, &m_SpotLights[i]->OuterCutOff);
 	}
 	start += 6 * floatSize;
 	int dirLightCount = m_DirectionalLights.size();

@@ -107,8 +107,8 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     // 衰减
-    float distance    = length(light.position - fragPos);
-    float attenuation = 1.0 / (1.0 + 0.09 * distance + 0.032 * (distance * distance)) * light.radius;    
+    float dist    = length(light.position - fragPos);
+    float attenuation = 1.0 / (1.0 + 0.09 * dist + 0.032 * (dist * dist));    
     // 合并结果
     vec3 ambient  = light.ambient  * vec3(texture(TexAlbedo, TexCoords));
     vec3 diffuse  = light.diffuse  * diff * vec3(texture(TexAlbedo, TexCoords));
@@ -123,6 +123,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 norm,vec3 fragPos,vec3 viewDir)
 {
 	 // 环境光
     vec3 ambient = light.ambient  * vec3(texture(TexAlbedo,TexCoords));
+    //vec3 ambient = vec3(0);
 
     // 漫反射 
     vec3 lightDir = normalize(light.position - fragPos);
@@ -142,8 +143,14 @@ vec3 CalcSpotLight(SpotLight light, vec3 norm,vec3 fragPos,vec3 viewDir)
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = light.specular * spec * vec3(texture(TexMetallic,TexCoords));  
 
-//    vec3 result = ambient + diffuse * intensity + specular * intensity;
-    vec3 result = ambient + diffuse * intensity + specular * intensity;
+    vec3 result = ambient* intensity + diffuse * intensity + specular * intensity;
+    //vec3 result =   diffuse * intensity + specular * intensity;
+//	if(intensity<=0){
+//		return vec3(0);
+//	}else{
+//		return ambient;
+//	}
+
 	return result;
 }
 
@@ -152,27 +159,31 @@ void Init()
 {
 	for(int i=0;i<dirLightCount;i++){
 		dirLights[i].direction = dirLightDir[i];
-		dirLights[i].ambient = dirLightCol[i];
-		dirLights[i].diffuse = dirLights[i].ambient * vec3(0.2);
-		dirLights[i].specular = vec3(1.0);
+		dirLights[i].diffuse = dirLightCol[i] * 0.6;
+		dirLights[i].ambient = dirLights[i].diffuse * (0.2);
+
+		dirLights[i].specular = vec3(0.3);
 
 	}
     for(int i = 0; i < pointLightCount; i++)
 	{
 		pointLights[i].position = pointLightPos[i];
-		pointLights[i].ambient = pointLightCol[i];
 		pointLights[i].radius = pointLightRadius[i];
-		pointLights[i].diffuse = pointLights[i].ambient * vec3(0.2);
-		pointLights[i].specular = vec3(1.0);
+		pointLights[i].diffuse = pointLightCol[i] * 0.6;
+		pointLights[i].ambient = pointLights[i].diffuse * (0.2);
+
+		pointLights[i].specular = vec3(0.5);
 	}
 	for(int i=0;i<spotLightCount;i++){
 		spotLights[i].position = spotLightPos[i];
 		spotLights[i].direction = spotLightDir[i];
-		spotLights[i].ambient = spotLightCol[i];
 		spotLights[i].cutoff = spotLightCutOff[i];
 		spotLights[i].outerCutoff = spotLightOuterCutOff[i];
-		spotLights[i].diffuse = spotLights[i].ambient * vec3(0.2);
-		spotLights[i].specular = vec3(1.0);
+		spotLights[i].diffuse = spotLightCol[i] * 0.99;
+		//spotLights[i].ambient = spotLights[i].diffuse * 0.2;
+		spotLights[i].ambient = spotLightCol[i];
+
+		spotLights[i].specular = vec3(0.2);
 	}
 }
 
@@ -205,5 +216,6 @@ void main()
 	}else{
 		FragColor = vec4((result * MainColor), 1.0);
 	}
-	//FragColor = vec4(viewPos,1);
+
+	//FragColor = vec4(spotLightPos[0],1);
 } 

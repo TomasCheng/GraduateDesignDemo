@@ -105,8 +105,9 @@ Material Material::Copy()
 	copy.BlendDst = BlendDst;
 	copy.BlendEquation = BlendEquation;
 
-	copy.m_Uniforms = (m_Uniforms);
-	copy.m_SamplerUniforms = (m_SamplerUniforms);
+	copy.m_Uniforms = std::map<std::string, UniformValue>();
+	copy.m_SamplerUniforms = std::map<std::string, UniformValueSampler>();
+	copy.SetVector("MainColor", glm::vec3(1));
 
 	return copy;
 }

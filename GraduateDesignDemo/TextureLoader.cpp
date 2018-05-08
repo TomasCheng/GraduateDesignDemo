@@ -134,4 +134,10 @@ TextureCube TextureLoader::LoadTextureCube(std::string folder)
 		folder + "bottom.jpg",
 		folder + "back.jpg",
 		folder + "front.jpg");
+	//	return TextureLoader::LoadTextureCube(folder + "right.tga",
+	//		folder + "left.tga",
+	//		folder + "top.tga",
+	//		folder + "bottom.tga",
+	//		folder + "back.tga",
+	//		folder + "front.tga");
 }

@@ -44,6 +44,7 @@ Shader* ResourceLoader::LoadShader(std::string name, std::string vsPath, std::st
 	Shader shader = ShaderLoader::Load(name, vsPath, fsPath, defines);
 	ResourceLoader::m_Shaders[id] = shader;
 	return &ResourceLoader::m_Shaders[id];
+	//	return &shader;
 }
 // --------------------------------------------------------------------------------------------
 Shader* ResourceLoader::GetShader(std::string name)

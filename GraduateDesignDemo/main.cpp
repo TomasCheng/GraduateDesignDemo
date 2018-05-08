@@ -26,7 +26,7 @@
 #include "TextRender.h"
 using namespace std;
 
-const GLuint WIDTH = 1920, HEIGHT = 1080;
+const GLuint WIDTH = 1024, HEIGHT = 1024;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER);
@@ -326,59 +326,72 @@ int main()
 
 	glDepthFunc(GL_LEQUAL);
 
+	Scene::Init();
+	TextRender::Init(WIDTH, HEIGHT);
+
+	//播放声音
+	Scene::SoundPlayer->play2D("ophelia.mp3", true);
+
 	DirectionalLight* directional_light = new DirectionalLight();
 	directional_light->Color = glm::vec3(0.5);
 	Scene::AddLight(directional_light);
 
 	PointLight* pointLight = new PointLight();
-	pointLight->Color = glm::vec3(1);
-	pointLight->Position = glm::vec3(0, 1, 0);
+	pointLight->Color = glm::vec3(1, 1, 0);
+	pointLight->Position = glm::vec3(-7, 1.5, 0);
 	Scene::AddLight(pointLight);
 
 	PointLight* pointLight2 = new PointLight();
 	pointLight2->Color = glm::vec3(1, 0, 0);
-	pointLight2->Position = glm::vec3(10, 1, 0);
+	pointLight2->Position = glm::vec3(10, 1.5, 0);
 	Scene::AddLight(pointLight2);
 
-	Scene::Init();
+	//	Shader* shader = ResourceLoader::LoadShader("test");
+	//	Material* material = new Material(shader);
+	//	Mesh* mesh = new Cube;
+	//	SceneNode* node = new SceneNode(mesh, material);
+	//	material->SetVector("MainColor", glm::vec3(1.0));
+	//	Texture* defaultTexAlbedo = ResourceLoader::LoadTexture("default", "container2.jpg");
+	//	Texture* defaultTexMetallic = ResourceLoader::LoadTexture("default", "container2_specular.jpg");
+	//	material->SetTexture("TexAlbedo", defaultTexAlbedo, 0);
+	//	material->SetTexture("TexMetallic", defaultTexMetallic, 2);
+	//	node->SetPosition(glm::vec3(2, 2, 0));
+		//
+		//	mesh* plane = new Plane(16, 16);
+		//	material* material2 = new material(shader);
+		//	SceneNode* node2 = Scene::MakeSceneNode(plane, material2);
 
-	TextRender::Init(WIDTH, HEIGHT);
-
-	Shader* shader = ResourceLoader::LoadShader("test");
-	Material* material = new Material(shader);
-	Mesh* mesh = new Cube;
-	SceneNode* node = new SceneNode(mesh, material);
-	material->SetVector("MainColor", glm::vec3(1.0));
-	Texture* defaultTexAlbedo = ResourceLoader::LoadTexture("default", "container2.jpg");
-	Texture* defaultTexMetallic = ResourceLoader::LoadTexture("default", "container2_specular.jpg");
-	material->SetTexture("TexAlbedo", defaultTexAlbedo, 0);
-	material->SetTexture("TexMetallic", defaultTexMetallic, 2);
-	node->SetPosition(glm::vec3(2, 2, 0));
-	//
-	//	mesh* plane = new Plane(16, 16);
-	//	material* material2 = new material(shader);
-	//	SceneNode* node2 = Scene::MakeSceneNode(plane, material2);
-
-		//	material* mat = Scene::GetDefaultMaterialCopy();
-		//	mesh* cube = new Cube;
-		//	SceneNode* node3 = Scene::MakeSceneNode(cube, mat);
+			//	material* mat = Scene::GetDefaultMaterialCopy();
+			//	mesh* cube = new Cube;
+			//	SceneNode* node3 = Scene::MakeSceneNode(cube, mat);
 
 	Shader* s1 = ResourceLoader::LoadShader("floor");
 	Material* m1 = new Material(s1);
-	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
+	//	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
+	Texture* t1 = ResourceLoader::LoadTexture("floor", "container2.jpg");
 	m1->SetTexture("TexAlbedo", t1, 0);
-	m1->SetTexture("TexMetallic", defaultTexMetallic, 2);
-
+	//	m1->SetTexture("TexMetallic", t1, 2);
 	m1->SetVector("MainColor", glm::vec3(1.0));
-
 	Mesh* mesh1 = new Plane(1, 1);
 	SceneNode* n1 = new SceneNode(mesh1, m1);
 	n1->SetPosition(glm::vec3(-1, 0, 0));
 	n1->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
 	n1->SetScale(glm::vec3(65, 1, 65));
 
+	Shader* s2 = ResourceLoader::LoadShader("wall");
+	Material* m2 = new Material(s1);
+	//	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
+	Texture* t2 = ResourceLoader::LoadTexture("floor", "container2.jpg");
+	m2->SetTexture("TexAlbedo", t1, 0);
+	//	m1->SetTexture("TexMetallic", t1, 2);
+	m2->SetVector("MainColor", glm::vec3(1.0));
+	Mesh* mesh2 = new Plane(1, 1);
+	SceneNode* n2 = new SceneNode(mesh1, m1);
+	n2->SetPosition(glm::vec3(-10, 0, 0));
+	//	n2->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
+	n2->SetScale(glm::vec3(65, 65, 65));
+
 	//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
-	//
 	//	n2->SetPosition(glm::vec3(0, 0, 0));
 
 		//	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
@@ -392,13 +405,13 @@ int main()
 		//再分成2个场景
 		//运动的三个聚光灯
 	SpotLight* spot0 = new SpotLight();
-	spot0->Position = glm::vec3(0, 1, 1);
-	spot0->Direction = glm::vec3(0, -1, -1);
-	spot0->Color = glm::vec3(1, 1, 1);
-	//	Scene::AddLight(spot0);
+	spot0->Position = glm::vec3(0, 5, 0);
+	spot0->Direction = glm::vec3(0, -1, 0);
+	spot0->Color = glm::vec3(1, 1, 0);
+	Scene::AddLight(spot0);
 
 	TextureCube* skybox = ResourceLoader::LoadTextureCube("skybox", "");
-	Scene::SetSkyBox(skybox);
+	//	Scene::SetSkyBox(skybox);
 
 	Scene::PrintNodeTree(Scene::Root);
 

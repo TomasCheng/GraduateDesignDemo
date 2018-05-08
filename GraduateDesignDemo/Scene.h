@@ -5,6 +5,8 @@
 #include "PointLight.h"
 #include "DirectionalLight.h"
 #include "SpotLight.h"
+#include <irrklang/irrKlang.h>
+using namespace irrklang;
 
 class Mesh;
 class Material;
@@ -20,6 +22,8 @@ class Scene
 {
 public:
 	static Camera* mainCamera;
+
+	static ISoundEngine *SoundPlayer;
 
 	static SceneNode* Root;
 	//	static unsigned int CounterID;

@@ -11,5 +11,5 @@ public:
 	float      Intensity = 1.0f;
 	float      Radius = 1.0f;
 	bool       Visible = true;
-	bool       RenderMesh = false;
+	bool       RenderMesh = true;
 };
