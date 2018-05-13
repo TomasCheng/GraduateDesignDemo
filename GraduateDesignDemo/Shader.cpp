@@ -18,23 +18,16 @@ Shader::Shader(std::string name, std::string vsCode, std::string fsCode, std::ve
 void Shader::Load(std::string name, std::string vsCode, std::string fsCode, std::vector<std::string> defines)
 {
 	Name = name;
-	// compile both shaders and link them
 	unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
 	unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
 	ID = glCreateProgram();
 	int status;
 	char log[1024];
 
-	// if a list of define statements is specified, add these  to the start of the shader
-	// source, s.t. we can selectively compile different shaders based on the defines we set.
 	if (defines.size() > 0)
 	{
 		std::vector<std::string> vsMergedCode;
 		std::vector<std::string> fsMergedCode;
-		// first determine if the user supplied a #version  directive at the top of the shader
-		// code, in which case we  extract it and add it 'before' the list of define code.
-		// the GLSL version specifier is only valid as the first line of the GLSL code;
-		// otherwise the GLSL version defaults to 1.1.
 		std::string firstLine = vsCode.substr(0, vsCode.find("\n"));
 		if (firstLine.find("#version") != std::string::npos)
 		{

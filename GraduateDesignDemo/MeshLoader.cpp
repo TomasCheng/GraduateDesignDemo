@@ -47,9 +47,6 @@ SceneNode* MeshLoader::LoadMesh(std::string path, bool setDefaultMaterial)
 // --------------------------------------------------------------------------------------------
 SceneNode* MeshLoader::processNode(aiNode* aNode, const aiScene* aScene, std::string directory, bool setDefaultMaterial)
 {
-	// note that we allocate memory ourselves and pass memory responsibility to calling
-	// resource manager. The resource manager is responsible for holding the scene node
-	// pointer and deleting where appropriate.
 	SceneNode* node = new SceneNode();
 
 	//	string id = std::string(aNode->mName.C_Str()) + directory;
@@ -82,7 +79,6 @@ SceneNode* MeshLoader::processNode(aiNode* aNode, const aiScene* aScene, std::st
 			material = MeshLoader::parseMaterial(assimpMat, aScene, directory);
 		}
 
-		// if we only have one mesh, this node itself contains the mesh/material.
 		if (aNode->mNumMeshes == 1)
 		{
 			node->mesh = mesh;
@@ -93,7 +89,6 @@ SceneNode* MeshLoader::processNode(aiNode* aNode, const aiScene* aScene, std::st
 			node->BoxMin = boxMin;
 			node->BoxMax = boxMax;
 		}
-		// otherwise, the meshes are considered on equal depth of its children
 		else
 		{
 			SceneNode* child = new SceneNode(node);
@@ -105,7 +100,6 @@ SceneNode* MeshLoader::processNode(aiNode* aNode, const aiScene* aScene, std::st
 		}
 	}
 
-	// also recursively parse this node's children
 	for (unsigned int i = 0; i < aNode->mNumChildren; ++i)
 	{
 		node->AddChild(MeshLoader::processNode(aNode->mChildren[i], aScene, directory, setDefaultMaterial));
@@ -134,11 +128,8 @@ Mesh* MeshLoader::parseMesh(aiMesh* aMesh, const aiScene* aScene, glm::vec3& out
 		tangents.resize(aMesh->mNumVertices);
 		bitangents.resize(aMesh->mNumVertices);
 	}
-	// we assume a constant of 3 vertex indices per face as we always triangulate in Assimp's
-	// post-processing step; otherwise you'll want transform this to a more  flexible scheme.
 	indices.resize(aMesh->mNumFaces * 3);
 
-	// store min/max point in local coordinates for calculating approximate bounding box.
 	glm::vec3 pMin(99999.0);
 	glm::vec3 pMax(-99999.0);
 
@@ -164,7 +155,6 @@ Mesh* MeshLoader::parseMesh(aiMesh* aMesh, const aiScene* aScene, glm::vec3& out
 	}
 	for (unsigned int f = 0; f < aMesh->mNumFaces; ++f)
 	{
-		// we know we're always working with triangles due to TRIANGULATE option.
 		for (unsigned int i = 0; i < 3; ++i)
 		{
 			indices[f * 3 + i] = aMesh->mFaces[f].mIndices[i];
@@ -191,8 +181,6 @@ Mesh* MeshLoader::parseMesh(aiMesh* aMesh, const aiScene* aScene, glm::vec3& out
 	out_Max.y = pMax.y;
 	out_Max.z = pMax.z;
 
-	// store newly generated mesh in globally stored mesh store for memory de-allocation when
-	// a clean is required.
 	MeshLoader::meshStore.push_back(mesh);
 
 	return mesh;
@@ -200,9 +188,7 @@ Mesh* MeshLoader::parseMesh(aiMesh* aMesh, const aiScene* aScene, glm::vec3& out
 // --------------------------------------------------------------------------------------------
 Material *MeshLoader::parseMaterial(aiMaterial* aMaterial, const aiScene* aScene, std::string directory)
 {
-	// create a unique default material for each loaded mesh.
 	Material* material;
-	// check if diffuse texture has alpha, if so: make alpha blend material;
 	aiString file;
 	aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file);
 	std::string diffPath = std::string(file.C_Str());
@@ -217,33 +203,11 @@ Material *MeshLoader::parseMaterial(aiMaterial* aMaterial, const aiScene* aScene
 		material = Scene::GetDefaultMaterialCopy();
 	}
 
-	/* NOTE(Joey):
-
-	About texture types:
-
-	We use a PBR metallic/roughness workflow so the loaded models are expected to have
-	textures conform the workflow: albedo, (normal), metallic, roughness, (ao). Since Assimp
-	made certain assumptions regarding possible types of loaded textures it doesn't directly
-	translate to our model thus we make some assumptions as well which the 3D author has to
-	comply with if he wants the mesh(es) to directly render with its specified textures:
-
-	- aiTextureType_DIFFUSE:   Albedo
-	- aiTextureType_NORMALS:   Normal
-	- aiTextureType_SPECULAR:  metallic
-	- aiTextureType_SHININESS: roughness
-	- aiTextureType_AMBIENT:   AO (ambient occlusion)
-	- aiTextureType_EMISSIVE:  Emissive
-
-	*/
 	if (aMaterial->GetTextureCount(aiTextureType_DIFFUSE) > 0)
 	{
-		// we only load the first of the list of diffuse textures, we don't really care about
-		// meshes with multiple diffuse layers; same holds for other texture types.
 		aiString file;
 		aMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file);
 		std::string fileName = MeshLoader::processPath(&file, directory);
-		// we name the texture the same as the filename as to reduce naming conflicts while
-		// still only loading unique textures.
 		Texture* texture = ResourceLoader::LoadTexture(fileName, fileName, GL_TEXTURE_2D, alpha ? GL_RGBA : GL_RGB, true);
 		if (texture)
 		{
@@ -305,8 +269,7 @@ Material *MeshLoader::parseMaterial(aiMaterial* aMaterial, const aiScene* aScene
 std::string MeshLoader::processPath(aiString *aPath, std::string directory)
 {
 	std::string path = std::string(aPath->C_Str());
-	// parse path directly if path contains "/" indicating it is an absolute path;  otherwise
-	// parse as relative.
+
 	if (path.find(":/") == std::string::npos || path.find(":\\") == std::string::npos)
 		path = directory + "/" + path;
 	return path;

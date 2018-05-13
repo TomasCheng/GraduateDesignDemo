@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/fwd.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
@@ -24,9 +23,10 @@
 #include "SphereMesh.h"
 #include "PlaneMesh.h"
 #include "TextRender.h"
+#include <sstream>
 using namespace std;
 
-const GLuint WIDTH = 1024, HEIGHT = 1024;
+const GLuint WIDTH = 1080, HEIGHT = 1080;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER);
@@ -59,6 +59,9 @@ GLuint VAO, VBO;
 float moveF;
 float moveR;
 float moveU;
+
+std::stringstream fpsss;
+std::string fpsstr;
 
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
 {
@@ -333,7 +336,7 @@ int main()
 	Scene::SoundPlayer->play2D("ophelia.mp3", true);
 
 	DirectionalLight* directional_light = new DirectionalLight();
-	directional_light->Color = glm::vec3(0.5);
+	directional_light->Color = glm::vec3(0.9);
 	Scene::AddLight(directional_light);
 
 	PointLight* pointLight = new PointLight();
@@ -394,9 +397,9 @@ int main()
 	//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
 	//	n2->SetPosition(glm::vec3(0, 0, 0));
 
-		//	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
-		//	n3->SetPosition(glm::vec3(300, 0, 0));
-		//	n3->SetScale(0.1f);
+//	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
+//	n3->SetPosition(glm::vec3(300, 0, 0));
+//	n3->SetScale(0.1f);
 
 	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
 	//	n4->SetPosition(glm::vec3(0, 0, 4));
@@ -463,9 +466,13 @@ int main()
 
 		Scene::Update();
 
+		//对FPS的处理
 		double fps = 1.0f / deltaTime;
+		fpsss.str("");
 		fps = ((double)((int)((fps + 0.005) * 100))) / 100;
-		TextRender::Render("FPS:" + to_string(fps), WIDTH - 200, HEIGHT - 30, 0.5, glm::vec3(1, 0.0f, 0.0f));
+		fpsss << fps;
+		fpsstr = fpsss.str();
+		TextRender::Render("FPS:" + fpsstr, WIDTH - 200, HEIGHT - 30, 0.5, glm::vec3(1, 0.0f, 0.0f));
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

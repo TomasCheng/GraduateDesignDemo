@@ -237,14 +237,14 @@
     <None Include="DefaultVertShader.vert">
       <Filter>resource</Filter>
     </None>
-    <None Include="commom\Commom.glsl">
-      <Filter>resource</Filter>
-    </None>
     <None Include="TextShader.vert">
       <Filter>text</Filter>
     </None>
     <None Include="TextShader.frag">
       <Filter>text</Filter>
+    </None>
+    <None Include="Commom.glsl">
+      <Filter>resource</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

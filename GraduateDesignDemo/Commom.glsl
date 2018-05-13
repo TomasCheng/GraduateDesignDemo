@@ -1,13 +1,15 @@
 #ifndef COMMOM_H
 #define COMMOM_H
 #extension GL_ARB_shading_language_420pack : enable
+// global uniform buffer for shared common set of uniforms among programs
+
 layout (std140, binding = 0) uniform Global
 {
     // trtansformations
-    mat4 proj;//0
-    mat4 view;//64*1
+    mat4 proj;
+    mat4 view;
     // scene
-    vec3 viewPos;//16
+    vec3 viewPos;
     // lighting
     vec3 dirLightDir[4];
     vec3 dirLightCol[4];

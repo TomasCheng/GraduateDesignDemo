@@ -32,7 +32,17 @@ Shader ShaderLoader::Load(std::string name, std::string vsPath, std::string fsPa
 // --------------------------------------------------------------------------------------------
 std::string ShaderLoader::readShader(std::ifstream& file, const std::string& name, std::string path)
 {
-	std::string directory = path.substr(0, path.find_last_of("/\\"));
+	int index = path.find_last_of("/");
+	std::string directory;
+	if (index >= 0)
+	{
+		directory = path.substr(0, path.find_last_of("/\\"));
+	}
+	else
+	{
+		directory = "";
+	}
+	//	 directory = path.substr(0, path.find_last_of("/\\"));
 	std::string source, line;
 	while (std::getline(file, line))
 	{
@@ -40,10 +50,18 @@ std::string ShaderLoader::readShader(std::ifstream& file, const std::string& nam
 		if (line.substr(0, 8) == "#include")
 		{
 			std::string includePath = directory + "/" + line.substr(9);
+
+			if (directory == "")
+			{
+				includePath = line.substr(9);
+			}
+			else
+			{
+				includePath = directory + "/" + line.substr(9);
+			}
 			std::ifstream includeFile(includePath);
 			if (includeFile.is_open())
 			{
-				// we recursively read the shader file to support any shader include depth
 				source += readShader(includeFile, name, includePath);
 			}
 			else

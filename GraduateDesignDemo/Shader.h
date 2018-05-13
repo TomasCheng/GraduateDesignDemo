@@ -8,13 +8,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "glad/glad.h" // 包含glad来获取所有的必须OpenGL头文件
 
-/*
-
-Shader object for quickly creating and using a GPU shader object. When compiling/linking a
-shader object from source code, all vertex attributes and uniforms are extracted for saving
-unnecessary additional CPU->GPU roundtrip times.
-
-*/
 class Shader
 {
 public:
@@ -50,7 +43,6 @@ public:
 	void SetMatrixArray(std::string location, int size, glm::mat3* values);
 	void SetMatrixArray(std::string location, int size, glm::mat4* values);
 private:
-	// retrieves uniform location from pre-stored uniform locations and reports an error if a
-	// non-uniform is set.
+
 	int getUniformLocation(std::string name);
 };

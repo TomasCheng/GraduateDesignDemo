@@ -184,7 +184,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="commom\Commom.glsl" />
+    <None Include="Commom.glsl" />
     <None Include="cubeMapShader.frag" />
     <None Include="cubeMapShader.vert" />
     <None Include="DefaultFragShader.frag" />

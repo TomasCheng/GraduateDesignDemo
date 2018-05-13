@@ -15,15 +15,9 @@ class SceneNode;
 class Mesh;
 class Material;
 
-/*
-
-mesh load functionality.
-
-*/
 class MeshLoader
 {
 private:
-	// NOTE(Joey): keep track of all loaded mesh
 	static std::vector<Mesh*> meshStore;
 
 	static std::map<std::string, Mesh*> meshMap;

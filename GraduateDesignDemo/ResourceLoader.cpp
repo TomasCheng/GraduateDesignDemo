@@ -23,9 +23,6 @@ void ResourceLoader::Init()
 }
 void ResourceLoader::Clean()
 {
-	// traverse all stored mesh scene nodes and delete accordingly.
-	// Note that this time we don't care about deleting dangling pointers as each scene node is
-	// unique and shouldn't reference other scene nodes than their children.
 	for (auto it = m_Meshes.begin(); it != m_Meshes.end(); it++)
 	{
 		delete it->second;
