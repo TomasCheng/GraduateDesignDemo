@@ -24,6 +24,7 @@
 #include "PlaneMesh.h"
 #include "TextRender.h"
 #include <sstream>
+#include "QuardMesh.h"
 using namespace std;
 
 const GLuint WIDTH = 1080, HEIGHT = 1080;
@@ -286,23 +287,30 @@ int main()
 	glGenFramebuffers(1, &framebuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
-	// 生成纹理
+	//	// 生成纹理
 	glActiveTexture(GL_TEXTURE0);
-	unsigned int texColorBuffer;
-	glGenTextures(1, &texColorBuffer);
-	//	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//	glBindTexture(GL_TEXTURE_2D, 0);
+	//	unsigned int texColorBuffer;
+	//	glGenTextures(1, &texColorBuffer);
+	//	//	glBindTexture(GL_TEXTURE_2D, texColorBuffer);
+	//	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, WIDTH, HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	//	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	//	//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//	//	glBindTexture(GL_TEXTURE_2D, 0);
+	//
+	//	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texColorBuffer);
+	//	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, WIDTH, HEIGHT, GL_TRUE);
+	//	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, texColorBuffer);
+	Texture* screenTex = new Texture;
+	screenTex->Generate(WIDTH, HEIGHT, GL_TEXTURE_2D, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, screenTex->ID);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, WIDTH, HEIGHT, GL_TRUE);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
 	// 将它附加到当前绑定的帧缓冲对象
 //	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, texColorBuffer, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, screenTex->ID, 0);
 
 	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
@@ -333,7 +341,7 @@ int main()
 	TextRender::Init(WIDTH, HEIGHT);
 
 	//播放声音
-	Scene::SoundPlayer->play2D("ophelia.mp3", true);
+//	Scene::SoundPlayer->play2D("ophelia.mp3", true);
 
 	DirectionalLight* directional_light = new DirectionalLight();
 	directional_light->Color = glm::vec3(0.9);
@@ -364,9 +372,10 @@ int main()
 		//	material* material2 = new material(shader);
 		//	SceneNode* node2 = Scene::MakeSceneNode(plane, material2);
 
-			//	material* mat = Scene::GetDefaultMaterialCopy();
-			//	mesh* cube = new Cube;
-			//	SceneNode* node3 = Scene::MakeSceneNode(cube, mat);
+	Material* mat = Scene::GetDefaultMaterialCopy();
+	Mesh* cube = new Cube;
+	SceneNode* node3 = Scene::MakeSceneNode(cube, mat);
+	mat->SetVector("MainColor", glm::vec3(1));
 
 	Shader* s1 = ResourceLoader::LoadShader("floor");
 	Material* m1 = new Material(s1);
@@ -384,39 +393,47 @@ int main()
 	Shader* s2 = ResourceLoader::LoadShader("wall");
 	Material* m2 = new Material(s1);
 	//	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
-	Texture* t2 = ResourceLoader::LoadTexture("floor", "container2.jpg");
-	m2->SetTexture("TexAlbedo", t1, 0);
+	Texture* t2 = ResourceLoader::LoadTexture("floor", "chess.jpg");
+	m2->SetTexture("TexAlbedo", t2, 0);
 	//	m1->SetTexture("TexMetallic", t1, 2);
 	m2->SetVector("MainColor", glm::vec3(1.0));
 	Mesh* mesh2 = new Plane(1, 1);
-	SceneNode* n2 = new SceneNode(mesh1, m1);
-	n2->SetPosition(glm::vec3(-10, 0, 0));
-	//	n2->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
-	n2->SetScale(glm::vec3(65, 65, 65));
+	//	SceneNode* n2 = new SceneNode(mesh1, m1);
+	//	n2->SetPosition(glm::vec3(-10, 0, 0));
+	//	//	n2->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
+	//	n2->SetScale(glm::vec3(65, 65, 65));
 
-	//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
-	//	n2->SetPosition(glm::vec3(0, 0, 0));
+		//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
+		//	n2->SetPosition(glm::vec3(0, 0, 0));
 
-//	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
-//	n3->SetPosition(glm::vec3(300, 0, 0));
-//	n3->SetScale(0.1f);
+	//	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
+	//	n3->SetPosition(glm::vec3(300, 0, 0));
+	//	n3->SetScale(0.1f);
 
-	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
-	//	n4->SetPosition(glm::vec3(0, 0, 4));
-		//	Scene::AddChild(n2);
+		//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
+		//	n4->SetPosition(glm::vec3(0, 0, 4));
+			//	Scene::AddChild(n2);
 
-		//再分成2个场景
-		//运动的三个聚光灯
+			//再分成2个场景
+			//运动的三个聚光灯
 	SpotLight* spot0 = new SpotLight();
 	spot0->Position = glm::vec3(0, 5, 0);
 	spot0->Direction = glm::vec3(0, -1, 0);
 	spot0->Color = glm::vec3(1, 1, 0);
 	Scene::AddLight(spot0);
 
-	TextureCube* skybox = ResourceLoader::LoadTextureCube("skybox", "");
-	//	Scene::SetSkyBox(skybox);
+	Shader* screenShader = ResourceLoader::LoadShader("screen", "RTTShader.vert", "RTTShader.frag");
+	Material* screenMat = new Material(screenShader);
+	Mesh* screenMesh = new Quad();
+	SceneNode *screen = new SceneNode(screenMesh, screenMat, nullptr);
+	screenMat->SetTexture("screenTexture", screenTex);
+
+	TextureCube * skybox = ResourceLoader::LoadTextureCube("skybox", "");
+	Scene::SetSkyBox(skybox);
 
 	Scene::PrintNodeTree(Scene::Root);
+
+	bool isScreen = false;
 
 	//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
@@ -428,13 +445,16 @@ int main()
 		//				//				glViewport(0, 0, width, height);
 		//
 		//				glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		//				isScreen = true;
 		//			}
 		//			else
 		//			{
 		//				//				glViewport(0, 0, 10.0f, 10.0f);
 		//
 		//				glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//				isScreen = false;
 		//			}
+		//		}
 
 		GLfloat currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -442,6 +462,14 @@ int main()
 		//检查事件
 		glfwPollEvents();
 		do_movement();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+		//渲染指令
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 		//渲染指令
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -454,6 +482,8 @@ int main()
 		dynamicLightPos.x = lightPos.x + offsetx;
 		dynamicLightPos.z = lightPos.z + offsety;
 
+		pointLight->Position = glm::vec3(offsetx, pointLight->Position.y, +offsety);
+
 		glm::mat4 view(1.0f);
 		view = Scene::mainCamera->GetViewMatrix();
 		glm::mat4 proj(1.0f);
@@ -464,7 +494,21 @@ int main()
 		spot0->Position = Scene::mainCamera->Position;
 		spot0->Direction = Scene::mainCamera->Front;
 
+		//渲染两次
+//		if (isScreen)
+//		{
+//			screen->Render();
+//		}
+//		else
+//		{
+//			Scene::Update();
+//		}
+		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 		Scene::Update();
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//		Scene::Update();
+		screen->Render();
 
 		//对FPS的处理
 		double fps = 1.0f / deltaTime;
@@ -474,9 +518,9 @@ int main()
 		fpsstr = fpsss.str();
 		TextRender::Render("FPS:" + fpsstr, WIDTH - 200, HEIGHT - 30, 0.5, glm::vec3(1, 0.0f, 0.0f));
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		//		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		//交换缓冲
+				//交换缓冲
 		glfwSwapBuffers(window);
 	}
 	glDeleteVertexArrays(1, &VAO);
@@ -533,6 +577,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	// 关闭应用程序
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, GL_TRUE);
+
+	if (key == GLFW_KEY_L && action == GLFW_PRESS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//线框模式
+	}
+	else if (key == GLFW_KEY_K && action == GLFW_PRESS)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 
 	if (action == GLFW_PRESS)
 		keys[key] = true;

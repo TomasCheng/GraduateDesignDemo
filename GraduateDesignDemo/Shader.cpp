@@ -52,9 +52,7 @@ void Shader::Load(std::string name, std::string vsCode, std::string fsCode, std:
 		// then addremaining shader code to merged result and pass result to glShaderSource.
 		vsMergedCode.push_back(vsCode);
 		fsMergedCode.push_back(fsCode);
-		// note that we manually build an array of C style  strings as glShaderSource doesn't
-		// expect it in any other format.
-		// all strings are null-terminated so pass NULL as glShaderSource's final argument.
+
 		const char **vsStringsC = new const char*[vsMergedCode.size()];
 		const char **fsStringsC = new const char*[fsMergedCode.size()];
 		for (unsigned int i = 0; i < vsMergedCode.size(); ++i)

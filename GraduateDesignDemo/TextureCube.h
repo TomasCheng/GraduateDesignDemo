@@ -7,7 +7,6 @@ class TextureCube
 public:
 	unsigned int ID;
 
-	// directly change the texture state where relevant from within the setters.
 	GLenum InternalFormat = GL_RGBA;            // the format each texel is stored in
 	GLenum Format = GL_RGBA;            // the format each texel is stored in
 	GLenum Type = GL_UNSIGNED_BYTE;

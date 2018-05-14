@@ -11,9 +11,6 @@
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c">
       <Filter>include</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>camera</Filter>
-    </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>model</Filter>
     </ClCompile>
@@ -244,6 +241,12 @@
       <Filter>text</Filter>
     </None>
     <None Include="Commom.glsl">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="ScreenEffectNormal.vert">
+      <Filter>resource</Filter>
+    </None>
+    <None Include="ScreenEffectNormal.frag">
       <Filter>resource</Filter>
     </None>
   </ItemGroup>

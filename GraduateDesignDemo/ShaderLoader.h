@@ -5,12 +5,6 @@
 #include <vector>
 #include "Shader.h"
 
-/*
-
-A static helper class that does the relevant file IO and custom shader pre-processing to load
-and parse shader code.
-
-*/
 class ShaderLoader
 {
 public:

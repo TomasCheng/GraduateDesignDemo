@@ -1,7 +1,9 @@
 #pragma once
 
+//#include "SceneNode.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+class SceneNode;
 
 class SpotLight
 {
@@ -12,5 +14,7 @@ public:
 	float      Intensity = 1.0f;
 	float      CutOff = glm::cos(glm::radians(1.5f));
 	float       OuterCutOff = glm::cos(glm::radians(2.5f));
-	bool       RenderMesh = true;
+	bool       RenderMesh = false;
+
+	SceneNode* renderNode;
 };

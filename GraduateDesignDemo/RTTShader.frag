@@ -3,16 +3,20 @@ out vec4 FragColor;
 
 in vec2 TexCoords;
 
+#include Commom.glsl
+
+
 uniform sampler2D screenTexture;
 
 void main()
 { 
 	
 	vec4 vec = texture(screenTexture, vec2(1.0f - TexCoords.x,TexCoords.y));
-	if(TexCoords.x < 0.01 || TexCoords.x>0.99 ||TexCoords.y < 0.01 || TexCoords.y>0.99 ){
-		FragColor = vec4(1.0f,1.0f,0.0f,1.0f);
-	}else{
+//	if(TexCoords.x < 0.01 || TexCoords.x>0.99 ||TexCoords.y < 0.01 || TexCoords.y>0.99 ){
+//		FragColor = vec4(1.0f,1.0f,0.0f,1.0f);
+//	}else{
 		FragColor = vec4(vec.rgb,1.0f);
+		//FragColor = vec4(1.0f,1.0f,0.0f,1.0f);
 
 		//后期处理
 		
@@ -71,7 +75,7 @@ void main()
 //		FragColor = vec4(col, 1.0);
 
 
-	}
+	//}
 
    
 }

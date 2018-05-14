@@ -24,7 +24,6 @@ private:
 	std::vector<SceneNode*> m_Children = std::vector<SceneNode*>();
 	SceneNode *m_Parent;
 
-	// per-node transform (w/ parent-child relationship)
 	glm::mat4 m_Transform = glm::mat4(1.0);
 	glm::mat4 m_PrevTransform = glm::mat4(1.0);
 	glm::vec3 m_Position = glm::vec3(0.0f);

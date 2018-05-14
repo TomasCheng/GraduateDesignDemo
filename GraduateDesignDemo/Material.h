@@ -20,7 +20,7 @@ private:
 	// shader state
 	Shader * m_Shader;
 	std::map<std::string, UniformValue>        m_Uniforms;
-	std::map<std::string, UniformValueSampler> m_SamplerUniforms; // NOTE(Joey): process samplers differently
+	std::map<std::string, UniformValueSampler> m_SamplerUniforms;
 public:
 
 	void Use();

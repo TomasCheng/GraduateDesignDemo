@@ -1,8 +1,11 @@
 #pragma once
 
+//#include "SceneNode.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+class SceneNode;
 class PointLight
 {
 public:
@@ -12,4 +15,6 @@ public:
 	float      Radius = 1.0f;
 	bool       Visible = true;
 	bool       RenderMesh = true;
+
+	SceneNode *renderNode = nullptr;
 };

@@ -34,8 +34,7 @@ struct Uniform
 struct UniformValue
 {
 	SHADER_TYPE Type;
-	// TODO(Joey): now each element takes up the space of its largest
-	// element (mat4) which is 64 bytes; come up with a better solution!
+
 	union
 	{
 		bool       Bool;

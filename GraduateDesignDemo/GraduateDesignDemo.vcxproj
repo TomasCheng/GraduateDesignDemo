@@ -122,7 +122,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CircleMesh.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="Floor.cpp" />
@@ -195,6 +194,8 @@
     <None Include="ModelShader.vert" />
     <None Include="RTTShader.frag" />
     <None Include="RTTShader.vert" />
+    <None Include="ScreenEffectNormal.frag" />
+    <None Include="ScreenEffectNormal.vert" />
     <None Include="Shader.frag" />
     <None Include="Shader.vert" />
     <None Include="TextShader.frag" />

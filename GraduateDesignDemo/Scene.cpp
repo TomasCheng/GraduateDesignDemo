@@ -8,6 +8,7 @@
 #include "SphereMesh.h"
 
 SceneNode* Scene::Root = new SceneNode(nullptr);
+
 //unsigned int Scene::CounterID = 0;
 SceneNode* Scene::skyboxSceneNode = nullptr;
 Material* Scene::skyBoxMaterial = nullptr;
@@ -110,6 +111,24 @@ void Scene::Render()
 		render(Scene::Root);
 	}
 
+	//渲染点光源和聚光灯
+	for (int i = 0; i < m_PointLights.size(); i++)
+	{
+		if (m_PointLights[i]->RenderMesh)
+		{
+			m_PointLights[i]->renderNode->SetPosition(m_PointLights[i]->Position);
+			m_PointLights[i]->renderNode->Render();
+		}
+	}
+
+	for (int i = 0; i < m_SpotLights.size(); i++)
+	{
+		if (m_SpotLights[i]->RenderMesh)
+		{
+			m_SpotLights[i]->renderNode->Render();
+		}
+	}
+
 	if (Scene::skyboxSceneNode != nullptr)
 	{
 		//渲染天空盒
@@ -185,9 +204,9 @@ void Scene::AddLight(PointLight* light)
 		Shader* lightShader = ResourceLoader::LoadShader("PointLight", "DefaultVertShader.vert", "Light.frag");
 		Material* mat = new Material(lightShader);
 		mat->SetVector("lightColor", light->Color);
-		SceneNode* node = new SceneNode(mesh, mat);
-		node->SetPosition(light->Position);
-		node->SetScale(light->Radius / 4.0);
+		light->renderNode = new SceneNode(mesh, mat);
+		light->renderNode->SetPosition(light->Position);
+		light->renderNode->SetScale(light->Radius / 4.0);
 	}
 }
 
@@ -201,9 +220,9 @@ void Scene::AddLight(SpotLight* light)
 		Shader* lightShader = ResourceLoader::LoadShader("PointLight", "DefaultVertShader.vert", "Light.frag");
 		Material* mat = new Material(lightShader);
 		mat->SetVector("lightColor", light->Color);
-		SceneNode* node = new SceneNode(mesh, mat);
-		node->SetPosition(light->Position);
-		node->SetScale(1.0 / 4.0);
+		light->renderNode = new SceneNode(mesh, mat);
+		light->renderNode->SetPosition(light->Position);
+		light->renderNode->SetScale(1.0 / 4.0);
 	}
 }
 

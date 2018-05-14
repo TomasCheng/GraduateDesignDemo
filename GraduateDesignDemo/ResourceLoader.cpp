@@ -17,9 +17,6 @@ MD5* ResourceLoader::md5 = new MD5;
 // --------------------------------------------------------------------------------------------
 void ResourceLoader::Init()
 {
-	// initialize default assets/ResourceLoader that should  always be available, regardless of
-	// configuration.
-	Texture placeholderTexture;
 }
 void ResourceLoader::Clean()
 {
@@ -159,22 +156,15 @@ SceneNode* ResourceLoader::LoadMesh(std::string name, std::string path)
 	md5->update(name);
 	string id = md5->toString();
 	md5->reset();
-	// if mesh's scene node was already loaded before, copy the scene node's memory and return
-	// the copied reference. We return a copy as the moment the global scene deletes the
-	// returned node, all other and next requested scene nodes of this model will end up as
-	// dangling pointers.
+
 	if (ResourceLoader::m_Meshes.find(id) != ResourceLoader::m_Meshes.end())
 	{
 		return (ResourceLoader::m_Meshes[id]);
 	}
 
-	// MeshLoader::LoadMesh initializes a scene node hierarchy on the heap. We are responsible
-	// for managing the memory; keep a reference to the root node of the model scene.
 	SceneNode* node = MeshLoader::LoadMesh(path);
 	ResourceLoader::m_Meshes[id] = node;
 
-	// return a copied reference through the scene to prevent dangling pointers.
-	// See description above.
 	return (node);
 }
 // --------------------------------------------------------------------------------------------
@@ -184,10 +174,7 @@ SceneNode* ResourceLoader::GetMesh(std::string name)
 	md5->update(name);
 	string id = md5->toString();
 	md5->reset();
-	// if mesh's scene node was already loaded before, copy the scene node's memory and return
-	// the copied reference. We return a copy as the moment the global scene deletes the
-	// returned node, all other and next requested scene nodes of this model will end up as
-	// dangling pointers.
+
 	if (ResourceLoader::m_Meshes.find(id) != ResourceLoader::m_Meshes.end())
 	{
 		return (ResourceLoader::m_Meshes[id]);
