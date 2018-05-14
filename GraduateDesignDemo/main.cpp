@@ -302,30 +302,31 @@ int main()
 	//	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
 	Texture* screenTex = new Texture;
-	screenTex->Generate(WIDTH, HEIGHT, GL_TEXTURE_2D, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+	screenTex->Generate(WIDTH, HEIGHT, GL_RGB, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, screenTex->ID);
-	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, WIDTH, HEIGHT, GL_TRUE);
-	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	//	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, screenTex->ID);
+	//	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, WIDTH, HEIGHT, GL_TRUE);
+	//	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
-	// 将它附加到当前绑定的帧缓冲对象
-//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, screenTex->ID, 0);
+		// 将它附加到当前绑定的帧缓冲对象
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTex->ID, 0);
+	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, screenTex->ID, 0);
 
 	unsigned int rbo;
 	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	//	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
-	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
+	//	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, WIDTH, HEIGHT);
 
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, rbo);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-	//	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	//	glBindFramebuffer(GL_READ_FRAMEBUFFER, rbo);
+	//	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		//	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << std::endl;
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	//	Shader rttShader = Shader("RTTShader.vert", "RTTShader.frag");
@@ -406,16 +407,16 @@ int main()
 		//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
 		//	n2->SetPosition(glm::vec3(0, 0, 0));
 
-	//	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
-	//	n3->SetPosition(glm::vec3(300, 0, 0));
-	//	n3->SetScale(0.1f);
+	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
+	n3->SetPosition(glm::vec3(300, 0, 0));
+	n3->SetScale(0.1f);
 
-		//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
-		//	n4->SetPosition(glm::vec3(0, 0, 4));
-			//	Scene::AddChild(n2);
+	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
+	//	n4->SetPosition(glm::vec3(0, 0, 4));
+		//	Scene::AddChild(n2);
 
-			//再分成2个场景
-			//运动的三个聚光灯
+		//再分成2个场景
+		//运动的三个聚光灯
 	SpotLight* spot0 = new SpotLight();
 	spot0->Position = glm::vec3(0, 5, 0);
 	spot0->Direction = glm::vec3(0, -1, 0);
@@ -425,6 +426,7 @@ int main()
 	Shader* screenShader = ResourceLoader::LoadShader("screen", "RTTShader.vert", "RTTShader.frag");
 	Material* screenMat = new Material(screenShader);
 	Mesh* screenMesh = new Quad();
+	//	Mesh* screenMesh = new Cube();
 	SceneNode *screen = new SceneNode(screenMesh, screenMat, nullptr);
 	screenMat->SetTexture("screenTexture", screenTex);
 
@@ -456,26 +458,20 @@ int main()
 		//			}
 		//		}
 
-		GLfloat currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
 		//检查事件
 		glfwPollEvents();
 		do_movement();
 
-		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		GLfloat currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
 
-		//渲染指令
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		//
+		//
+		//		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		//渲染指令
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		//设置根据时间变换的x，y偏移值，最终效果为圆周运动
+				//设置根据时间变换的x，y偏移值，最终效果为圆周运动
 		GLfloat timeValue = glfwGetTime();
 		GLfloat offsetx = 2 * ((sin(timeValue) / 2) + 0.5);
 		GLfloat offsety = 2 * ((cos(timeValue) / 2) + 0.5);
@@ -503,11 +499,17 @@ int main()
 //		{
 //			Scene::Update();
 //		}
+
 		glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+		//渲染指令
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		Scene::Update();
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		//		Scene::Update();
+		//渲染指令
+		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		screen->Render();
 
 		//对FPS的处理

@@ -1,10 +1,12 @@
 #version 330 core
+#include Commom.glsl
+
+
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 layout (location = 2) in vec3  aNormal;
 
 
-#include Commom.glsl
 
 out vec2 TexCoords;
 out vec3 Normal;
