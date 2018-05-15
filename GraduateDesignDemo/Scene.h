@@ -69,6 +69,7 @@ private:
 
 	static GLuint UBO;
 
+public:
 	static std::vector<DirectionalLight*> m_DirectionalLights;
 	static std::vector<PointLight*>       m_PointLights;
 	static std::vector<SpotLight*>       m_SpotLights;

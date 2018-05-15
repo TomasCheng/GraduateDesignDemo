@@ -25,6 +25,7 @@
 #include "TextRender.h"
 #include <sstream>
 #include "QuardMesh.h"
+#include "Math.h"
 using namespace std;
 
 const GLuint WIDTH = 1080, HEIGHT = 1080;
@@ -63,6 +64,13 @@ float moveU;
 
 std::stringstream fpsss;
 std::string fpsstr;
+
+Material* screenMat;
+
+SpotLight* spot0;
+
+std::vector<SceneNode*> Xnodes;
+std::vector<SceneNode*> Znodes;
 
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER)
 {
@@ -171,7 +179,7 @@ int main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	//	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
@@ -345,18 +353,24 @@ int main()
 //	Scene::SoundPlayer->play2D("ophelia.mp3", true);
 
 	DirectionalLight* directional_light = new DirectionalLight();
-	directional_light->Color = glm::vec3(0.9);
+	directional_light->Color = glm::vec3(1.0);
 	Scene::AddLight(directional_light);
 
 	PointLight* pointLight = new PointLight();
-	pointLight->Color = glm::vec3(1, 1, 0);
-	pointLight->Position = glm::vec3(-7, 1.5, 0);
+	pointLight->Color = glm::vec3(1, 0, 0.3);
+	pointLight->Position = glm::vec3(12, 2, 12);
+	pointLight->Radius = 1.5;
 	Scene::AddLight(pointLight);
 
 	PointLight* pointLight2 = new PointLight();
-	pointLight2->Color = glm::vec3(1, 0, 0);
-	pointLight2->Position = glm::vec3(10, 1.5, 0);
+	pointLight2->Color = glm::vec3(0, 0.5, 0);
+	pointLight2->Position = glm::vec3(5, 2, 3);
 	Scene::AddLight(pointLight2);
+
+	PointLight* pointLight3 = new PointLight();
+	pointLight3->Color = glm::vec3(0, 0.2, 1);
+	pointLight3->Position = glm::vec3(7, 2, 3);
+	Scene::AddLight(pointLight3);
 
 	//	Shader* shader = ResourceLoader::LoadShader("test");
 	//	Material* material = new Material(shader);
@@ -373,15 +387,10 @@ int main()
 		//	material* material2 = new material(shader);
 		//	SceneNode* node2 = Scene::MakeSceneNode(plane, material2);
 
-	Material* mat = Scene::GetDefaultMaterialCopy();
-	Mesh* cube = new Cube;
-	SceneNode* node3 = Scene::MakeSceneNode(cube, mat);
-	mat->SetVector("MainColor", glm::vec3(1));
-
 	Shader* s1 = ResourceLoader::LoadShader("floor");
 	Material* m1 = new Material(s1);
 	//	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
-	Texture* t1 = ResourceLoader::LoadTexture("floor", "container2.jpg");
+	Texture* t1 = ResourceLoader::LoadTexture("floor", "rcs-naofield.png");
 	m1->SetTexture("TexAlbedo", t1, 0);
 	//	m1->SetTexture("TexMetallic", t1, 2);
 	m1->SetVector("MainColor", glm::vec3(1.0));
@@ -392,39 +401,72 @@ int main()
 	n1->SetScale(glm::vec3(65, 1, 65));
 
 	Shader* s2 = ResourceLoader::LoadShader("wall");
-	Material* m2 = new Material(s1);
+	Material* m2 = new Material(s2);
 	//	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
-	Texture* t2 = ResourceLoader::LoadTexture("floor", "chess.jpg");
+	Texture* t2 = ResourceLoader::LoadTexture("wall", "chess.jpg");
 	m2->SetTexture("TexAlbedo", t2, 0);
 	//	m1->SetTexture("TexMetallic", t1, 2);
 	m2->SetVector("MainColor", glm::vec3(1.0));
 	Mesh* mesh2 = new Plane(1, 1);
-	//	SceneNode* n2 = new SceneNode(mesh1, m1);
-	//	n2->SetPosition(glm::vec3(-10, 0, 0));
-	//	//	n2->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
-	//	n2->SetScale(glm::vec3(65, 65, 65));
+	SceneNode* n2 = new SceneNode(mesh2, m2);
+	n2->SetPosition(glm::vec3(0, 30, -60));
+	//	n2->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
+	n2->SetScale(glm::vec3(65, 65, 65));
 
-		//	SceneNode * n2 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
-		//	n2->SetPosition(glm::vec3(0, 0, 0));
+	//中间一个箱子
+	Shader* s3 = ResourceLoader::LoadShader("cube");
+	Material* m3 = new Material(s3);
+	Texture* t31 = ResourceLoader::LoadTexture("cube1", "container2.jpg");
+	Texture* t32 = ResourceLoader::LoadTexture("cube2", "container2_specular.jpg");
+	m3->SetTexture("TexAlbedo", t31);
+	//	m3->SetTexture("TexMetallic", t32);
+	m3->SetVector("MainColor", glm::vec3(1.0));
 
-	SceneNode * n3 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
-	n3->SetPosition(glm::vec3(300, 0, 0));
-	n3->SetScale(0.1f);
+	Mesh* mesh = new Cube;
+	SceneNode* n3 = new SceneNode(mesh, m3);
+	n3->SetPosition(glm::vec3(14, 2.49, 20));
+	n3->SetScale(5);
 
-	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
-	//	n4->SetPosition(glm::vec3(0, 0, 4));
-		//	Scene::AddChild(n2);
+	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
+	//	n4->SetPosition(glm::vec3(0, 0, -5));
 
-		//再分成2个场景
-		//运动的三个聚光灯
-	SpotLight* spot0 = new SpotLight();
+		//	SceneNode * n5 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
+		//	n5->SetPosition(glm::vec3(-300, 0, 0));
+		//	n5->SetScale(0.1f);
+
+			//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
+			//	n4->SetPosition(glm::vec3(0, 0, 4));
+				//	Scene::AddChild(n2);
+
+	for (int i = 0; i < 10; i++)
+	{
+		Shader *s4 = ResourceLoader::LoadShader("normalXshader" + i, "DefaultVertShader.vert", "Light.frag");
+		Material *m4 = new Material(s4);
+		Mesh* mesh4 = new Sphere();
+		SceneNode* n4 = new SceneNode(mesh4, m4);
+		n4->SetPosition(glm::vec3(i * 4, 1, 0));
+		m4->SetVector("lightColor", glm::vec3(i*0.1, 0.2, 0.2));
+		Xnodes.push_back(n4);
+	}
+	for (int i = 0; i < 10; i++)
+	{
+		Shader *s4 = ResourceLoader::LoadShader("normalZshader" + i, "DefaultVertShader.vert", "Light.frag");
+		Material *m4 = new Material(s4);
+		Mesh* mesh4 = new Sphere();
+		SceneNode* n4 = new SceneNode(mesh4, m4);
+		n4->SetPosition(glm::vec3(0, 1, i * 4));
+		m4->SetVector("lightColor", glm::vec3(0.2, 0.1*i, 0.2));
+		Znodes.push_back(n4);
+	}
+
+	spot0 = new SpotLight();
 	spot0->Position = glm::vec3(0, 5, 0);
 	spot0->Direction = glm::vec3(0, -1, 0);
-	spot0->Color = glm::vec3(1, 1, 0);
+	spot0->Color = glm::vec3(0, 1, 0);
 	Scene::AddLight(spot0);
 
 	Shader* screenShader = ResourceLoader::LoadShader("screen", "RTTShader.vert", "RTTShader.frag");
-	Material* screenMat = new Material(screenShader);
+	screenMat = new Material(screenShader);
 	Mesh* screenMesh = new Quad();
 	//	Mesh* screenMesh = new Cube();
 	SceneNode *screen = new SceneNode(screenMesh, screenMat, nullptr);
@@ -478,7 +520,9 @@ int main()
 		dynamicLightPos.x = lightPos.x + offsetx;
 		dynamicLightPos.z = lightPos.z + offsety;
 
-		pointLight->Position = glm::vec3(offsetx, pointLight->Position.y, +offsety);
+		pointLight->Position = glm::vec3(pointLight->Position.x, offsety + 2, pointLight->Position.z);
+		pointLight2->Position = glm::vec3(offsetx * 8, pointLight->Position.y, offsety * 8);
+		pointLight3->Position = glm::vec3(offsetx * 20, pointLight->Position.y, offsety * 20);
 
 		glm::mat4 view(1.0f);
 		view = Scene::mainCamera->GetViewMatrix();
@@ -489,6 +533,14 @@ int main()
 
 		spot0->Position = Scene::mainCamera->Position;
 		spot0->Direction = Scene::mainCamera->Front;
+
+		for (int i = 0; i < 10; i++)
+		{
+			offsetx = 2 * ((sin(timeValue + i * 2.0 / PI) / 2) + 0.5);
+			offsety = 2 * ((cos(timeValue + i * 2.0 / PI) / 2) + 0.5);
+			Xnodes[i]->SetPosition(glm::vec3(i * 4, offsetx * 2 + 2, 0));
+			Znodes[i]->SetPosition(glm::vec3(0, offsety * 2 + 2, i * 4));
+		}
 
 		//渲染两次
 //		if (isScreen)
@@ -510,6 +562,8 @@ int main()
 		//渲染指令
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		Scene::Update();
+
 		screen->Render();
 
 		//对FPS的处理
@@ -587,6 +641,33 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	else if (key == GLFW_KEY_K && action == GLFW_PRESS)
 	{
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	else if (key == GLFW_KEY_F1 && action == GLFW_PRESS)
+	{
+		screenMat->SetInt("type", 0);
+	}
+	else if (key == GLFW_KEY_F2 && action == GLFW_PRESS)
+	{
+		screenMat->SetInt("type", 1);
+	}
+	else if (key == GLFW_KEY_F3 && action == GLFW_PRESS)
+	{
+		screenMat->SetInt("type", 2);
+	}
+	else if (key == GLFW_KEY_F4 && action == GLFW_PRESS)
+	{
+		screenMat->SetInt("type", 3);
+	}
+	else if (key == GLFW_KEY_O && action == GLFW_PRESS)
+	{
+		if (Scene::m_SpotLights.size() > 0)
+		{
+			Scene::m_SpotLights.pop_back();
+		}
+	}
+	else if (key == GLFW_KEY_P && action == GLFW_PRESS)
+	{
+		Scene::AddLight(spot0);
 	}
 
 	if (action == GLFW_PRESS)

@@ -117,17 +117,18 @@ void Scene::Render()
 		if (m_PointLights[i]->RenderMesh)
 		{
 			m_PointLights[i]->renderNode->SetPosition(m_PointLights[i]->Position);
+			m_PointLights[i]->renderNode->SetScale(m_PointLights[i]->Radius);
 			m_PointLights[i]->renderNode->Render();
 		}
 	}
 
-	for (int i = 0; i < m_SpotLights.size(); i++)
-	{
-		if (m_SpotLights[i]->RenderMesh)
-		{
-			m_SpotLights[i]->renderNode->Render();
-		}
-	}
+	//	for (int i = 0; i < m_SpotLights.size(); i++)
+	//	{
+	//		if (m_SpotLights[i]->RenderMesh)
+	//		{
+	//			m_SpotLights[i]->renderNode->Render();
+	//		}
+	//	}
 
 	if (Scene::skyboxSceneNode != nullptr)
 	{
@@ -206,24 +207,13 @@ void Scene::AddLight(PointLight* light)
 		mat->SetVector("lightColor", light->Color);
 		light->renderNode = new SceneNode(mesh, mat);
 		light->renderNode->SetPosition(light->Position);
-		light->renderNode->SetScale(light->Radius / 4.0);
+		light->renderNode->SetScale(light->Radius);
 	}
 }
 
 void Scene::AddLight(SpotLight* light)
 {
 	m_SpotLights.push_back(light);
-	if (light->RenderMesh)
-	{
-		//添加一个球体，颜色为光的颜色
-		Mesh* mesh = new Sphere;
-		Shader* lightShader = ResourceLoader::LoadShader("PointLight", "DefaultVertShader.vert", "Light.frag");
-		Material* mat = new Material(lightShader);
-		mat->SetVector("lightColor", light->Color);
-		light->renderNode = new SceneNode(mesh, mat);
-		light->renderNode->SetPosition(light->Position);
-		light->renderNode->SetScale(1.0 / 4.0);
-	}
 }
 
 Material* Scene::GetDefaultMaterialCopy()
