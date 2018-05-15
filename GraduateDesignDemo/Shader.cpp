@@ -31,25 +31,21 @@ void Shader::Load(std::string name, std::string vsCode, std::string fsCode, std:
 		std::string firstLine = vsCode.substr(0, vsCode.find("\n"));
 		if (firstLine.find("#version") != std::string::npos)
 		{
-			// strip shader code of first line and add to list of shader code strings.
 			vsCode = vsCode.substr(vsCode.find("\n") + 1, vsCode.length() - 1);
 			vsMergedCode.push_back(firstLine + "\n");
 		}
 		firstLine = fsCode.substr(0, fsCode.find("\n"));
 		if (firstLine.find("#version") != std::string::npos)
 		{
-			// strip shader code of first line and add to list of shader code strings.
 			fsCode = fsCode.substr(fsCode.find("\n") + 1, fsCode.length() - 1);
 			fsMergedCode.push_back(firstLine + "\n");
 		}
-		// then add define statements to the shader string list.
 		for (unsigned int i = 0; i < defines.size(); ++i)
 		{
 			std::string define = "#define " + defines[i] + "\n";
 			vsMergedCode.push_back(define);
 			fsMergedCode.push_back(define);
 		}
-		// then addremaining shader code to merged result and pass result to glShaderSource.
 		vsMergedCode.push_back(vsCode);
 		fsMergedCode.push_back(fsCode);
 
@@ -101,14 +97,12 @@ void Shader::Load(std::string name, std::string vsCode, std::string fsCode, std:
 	glDeleteShader(vs);
 	glDeleteShader(fs);
 
-	// query the number of active uniforms and attributes
 	int nrAttributes, nrUniforms;
 	glGetProgramiv(ID, GL_ACTIVE_ATTRIBUTES, &nrAttributes);
 	glGetProgramiv(ID, GL_ACTIVE_UNIFORMS, &nrUniforms);
 	Attributes.resize(nrAttributes);
 	Uniforms.resize(nrUniforms);
 
-	// iterate over all active attributes
 	char buffer[128];
 	for (unsigned int i = 0; i < nrAttributes; ++i)
 	{
@@ -120,7 +114,6 @@ void Shader::Load(std::string name, std::string vsCode, std::string fsCode, std:
 		Attributes[i].Location = glGetAttribLocation(ID, buffer);
 	}
 
-	// iterate over all active uniforms
 	for (unsigned int i = 0; i < nrUniforms; ++i)
 	{
 		GLenum glType;
@@ -239,7 +232,6 @@ void Shader::SetMatrix(std::string location, glm::mat4 value)
 // --------------------------------------------------------------------------------------------
 int Shader::getUniformLocation(std::string name)
 {
-	// read from uniform/attribute array as originally obtained from OpenGL
 	for (unsigned int i = 0; i < Uniforms.size(); ++i)
 	{
 		if (Uniforms[i].Name == name)

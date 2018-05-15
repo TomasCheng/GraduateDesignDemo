@@ -184,7 +184,7 @@ int main()
 	glfwWindowHint(GLFW_SAMPLES, 4);
 
 	//创建窗口对象
-	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "LearnOpenGL", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(WIDTH, HEIGHT, "MongoEngine", nullptr, nullptr);
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
@@ -218,6 +218,15 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_MULTISAMPLE);
+
+	int w, h, c;
+	string iconName = "mongo.png";
+	unsigned char* image = stbi_load(iconName.c_str(), &w, &h, &c, 0);
+	GLFWimage* icon = new GLFWimage();
+	icon->width = w;
+	icon->height = h;
+	icon->pixels = image;
+	glfwSetWindowIcon(window, 1, icon);
 
 	Scene::mainCamera = new Camera;
 
@@ -419,13 +428,21 @@ int main()
 	Texture* t31 = ResourceLoader::LoadTexture("cube1", "container2.jpg");
 	Texture* t32 = ResourceLoader::LoadTexture("cube2", "container2_specular.jpg");
 	m3->SetTexture("TexAlbedo", t31);
-	//	m3->SetTexture("TexMetallic", t32);
 	m3->SetVector("MainColor", glm::vec3(1.0));
-
 	Mesh* mesh = new Cube;
 	SceneNode* n3 = new SceneNode(mesh, m3);
-	n3->SetPosition(glm::vec3(14, 2.49, 20));
+	n3->SetPosition(glm::vec3(14, 2.5001, 20));
 	n3->SetScale(5);
+
+	Shader* s32 = ResourceLoader::LoadShader("cube22");
+	Material* m32 = new Material(s32);
+	Texture* t312 = ResourceLoader::LoadTexture("cube22", "chess.jpg");
+	m32->SetTexture("TexAlbedo", t312);
+	m32->SetVector("MainColor", glm::vec3(1.0));
+	Mesh* mesh32 = new Cube;
+	SceneNode* n32 = new SceneNode(mesh32, m32);
+	n32->SetPosition(glm::vec3(20, 2.5001, 15));
+	n32->SetScale(5);
 
 	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
 	//	n4->SetPosition(glm::vec3(0, 0, -5));
@@ -482,24 +499,6 @@ int main()
 	//让窗口接受输入并保持运行
 	while (!glfwWindowShouldClose(window))
 	{
-		//		for (int count = 0; count < 2; count++)
-		//		{
-		//			if (count == 0)
-		//			{
-		//				//				glViewport(0, 0, width, height);
-		//
-		//				glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-		//				isScreen = true;
-		//			}
-		//			else
-		//			{
-		//				//				glViewport(0, 0, 10.0f, 10.0f);
-		//
-		//				glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		//				isScreen = false;
-		//			}
-		//		}
-
 		//检查事件
 		glfwPollEvents();
 		do_movement();

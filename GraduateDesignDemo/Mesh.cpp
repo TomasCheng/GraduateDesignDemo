@@ -59,7 +59,6 @@ void Mesh::SetTangents(std::vector<glm::vec3> tangents, std::vector<glm::vec3> b
 // --------------------------------------------------------------------------------------------
 void Mesh::Finalize(bool interleaved)
 {
-	// initialize object IDs if not configured before
 	if (!m_VAO)
 	{
 		glGenVertexArrays(1, &m_VAO);
@@ -67,7 +66,6 @@ void Mesh::Finalize(bool interleaved)
 		glGenBuffers(1, &m_EBO);
 	}
 
-	// preprocess buffer data as interleaved or seperate when specified
 	std::vector<float> data;
 	if (interleaved)
 	{
@@ -103,7 +101,6 @@ void Mesh::Finalize(bool interleaved)
 	}
 	else
 	{
-		// if any of the float arrays are empty, data won't be filled by them.
 		for (int i = 0; i < Positions.size(); ++i)
 		{
 			data.push_back(Positions[i].x);
@@ -135,11 +132,9 @@ void Mesh::Finalize(bool interleaved)
 		}
 	}
 
-	// configure vertex attributes (only on vertex data size() > 0)
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 	glBufferData(GL_ARRAY_BUFFER, data.size() * sizeof(float), &data[0], GL_STATIC_DRAW);
-	// only fill the index buffer if the index array is non-empty.
 	if (Indices.size() > 0)
 	{
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
@@ -147,7 +142,6 @@ void Mesh::Finalize(bool interleaved)
 	}
 	if (interleaved)
 	{
-		// calculate stride from number of non-empty vertex attribute arrays
 		size_t stride = 3 * sizeof(float);
 		if (UV.size() > 0)         stride += 2 * sizeof(float);
 		if (Normals.size() > 0)    stride += 3 * sizeof(float);

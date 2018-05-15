@@ -24,16 +24,11 @@ Torus::Torus(float r1, float r2, unsigned int numSteps1, unsigned int numSteps2)
 		a += step;
 	}
 
-	// generate all the vertices, UVs, Normals (and Tangents/Bitangents):
 	for (int i = 0; i <= numSteps1; ++i)
 	{
-		// the basis vectors of the ring equal the difference  vector between the minorRing
-		// center and the donut's center position (which equals the origin (0, 0, 0)) and the
-		// positive z-axis.
-		glm::vec3 u = glm::normalize(glm::vec3(0.0f) - p[i]) * r2; // Could be p[i] also
+		glm::vec3 u = glm::normalize(glm::vec3(0.0f) - p[i]) * r2;
 		glm::vec3 v = glm::vec3(0.0f, 0.0f, 1.0f) * r2;
 
-		// create the vertices of each minor ring segment:
 		float a = 0.0f;
 		float step = 2.0f * PI / numSteps2;
 		for (int j = 0; j <= numSteps2; ++j)
@@ -42,15 +37,13 @@ Torus::Torus(float r1, float r2, unsigned int numSteps1, unsigned int numSteps2)
 			float s = sin(a);
 
 			Positions[i * (numSteps2 + 1) + j] = p[i] + c * u + s * v;
-			UV[i * (numSteps2 + 1) + j].x = ((float)i) / ((float)numSteps1) * TAU; // multiply by TAU to keep UVs symmetric along both axes.
+			UV[i * (numSteps2 + 1) + j].x = ((float)i) / ((float)numSteps1) * TAU;
 			UV[i * (numSteps2 + 1) + j].y = ((float)j) / ((float)numSteps2);
 			Normals[i * (numSteps2 + 1) + j] = glm::normalize(c * u + s * v);
 			a += step;
 		}
 	}
 
-	// generate the indicies for a triangle topology:
-	// NOTE(Joey): as taken from gamedev.net resource.
 	Indices.resize(numSteps1 * numSteps2 * 6);
 
 	int index = 0;

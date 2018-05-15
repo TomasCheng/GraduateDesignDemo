@@ -30,9 +30,8 @@ void Scene::Clear()
 SceneNode* Scene::MakeSceneNode()
 {
 	SceneNode* node = new SceneNode();
-	// keep a global rerefence to this scene node s.t.we can clear the scene's nodes for memory
-	// management: end of program or when switching scenes.
-//	Root->AddChild(node);
+
+	//	Root->AddChild(node);
 	return node;
 }
 // --------------------------------------------------------------------------------------------
@@ -43,9 +42,7 @@ SceneNode* Scene::MakeSceneNode(Mesh* mesh, Material* material)
 	node->mesh = mesh;
 	node->material = material;
 
-	// keep a global rerefence to this scene node s.t. we can clear the scene's nodes for
-	// memory management: end of program or when switching scenes.
-//	Root->AddChild(node);
+	//	Root->AddChild(node);
 	return node;
 }
 // --------------------------------------------------------------------------------------------

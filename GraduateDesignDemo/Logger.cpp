@@ -63,10 +63,8 @@ void Log::Display(const LOG_TYPE type)
 				for (std::size_t j = 0; j < m_LogEntries.at(i).size(); ++j)
 				{
 					std::cout << std::setw(7) << LOG_TYPE_NAME[i] << ": " << m_LogEntries.at(i).at(j) << std::endl;
-					//std::cout << " - "  << m_LogEntries[i][j] << std::endl;
 				}
 				std::cout << std::endl;
-				//std::cout << divider << std::endl << std::endl;
 			}
 		}
 	}

@@ -31,7 +31,6 @@ Shader* ResourceLoader::LoadShader(std::string name, std::string vsPath, std::st
 {
 	unsigned int id = SID(name);
 
-	// if shader already exists, return that handle
 	if (ResourceLoader::m_Shaders.find(id) != ResourceLoader::m_Shaders.end())
 		return &ResourceLoader::m_Shaders[id];
 
@@ -45,7 +44,6 @@ Shader* ResourceLoader::GetShader(std::string name)
 {
 	unsigned int id = SID(name);
 
-	// if shader exists, return that handle
 	if (ResourceLoader::m_Shaders.find(id) != ResourceLoader::m_Shaders.end())
 	{
 		return &ResourceLoader::m_Shaders[id];
@@ -61,7 +59,6 @@ Texture* ResourceLoader::LoadTexture(std::string name, std::string path, GLenum 
 {
 	unsigned int id = SID(name);
 
-	// if texture already exists, return that handle
 	if (ResourceLoader::m_Textures.find(id) != ResourceLoader::m_Textures.end())
 		return &ResourceLoader::m_Textures[id];
 
@@ -71,7 +68,6 @@ Texture* ResourceLoader::LoadTexture(std::string name, std::string path, GLenum 
 
 	Log::Message("Succesfully loaded: " + path + ".", LOG_INIT);
 
-	// make sure texture got properly loaded
 	if (texture.Width > 0)
 	{
 		ResourceLoader::m_Textures[id] = texture;
@@ -87,12 +83,10 @@ Texture* ResourceLoader::LoadHDR(std::string name, std::string path)
 {
 	unsigned int id = SID(name);
 
-	// if texture already exists, return that handle
 	if (ResourceLoader::m_Textures.find(id) != ResourceLoader::m_Textures.end())
 		return &ResourceLoader::m_Textures[id];
 
 	Texture texture = TextureLoader::LoadHDRTexture(path);
-	// make sure texture got properly loaded
 	if (texture.Width > 0)
 	{
 		ResourceLoader::m_Textures[id] = texture;
@@ -108,7 +102,6 @@ Texture* ResourceLoader::GetTexture(std::string name)
 {
 	unsigned int id = SID(name);
 
-	// if shader exists, return that handle
 	if (ResourceLoader::m_Textures.find(id) != ResourceLoader::m_Textures.end())
 	{
 		return &ResourceLoader::m_Textures[id];
@@ -124,7 +117,6 @@ TextureCube* ResourceLoader::LoadTextureCube(std::string name, std::string folde
 {
 	unsigned int id = SID(name);
 
-	// if texture already exists, return that handle
 	if (ResourceLoader::m_TexturesCube.find(id) != ResourceLoader::m_TexturesCube.end())
 		return &ResourceLoader::m_TexturesCube[id];
 
@@ -137,7 +129,6 @@ TextureCube* ResourceLoader::GetTextureCube(std::string name)
 {
 	unsigned int id = SID(name);
 
-	// if shader exists, return that handle
 	if (ResourceLoader::m_TexturesCube.find(id) != ResourceLoader::m_TexturesCube.end())
 	{
 		return &ResourceLoader::m_TexturesCube[id];
@@ -151,8 +142,6 @@ TextureCube* ResourceLoader::GetTextureCube(std::string name)
 // --------------------------------------------------------------------------------------------
 SceneNode* ResourceLoader::LoadMesh(std::string name, std::string path)
 {
-	//	unsigned int id = SID(name + path);
-
 	md5->update(name);
 	string id = md5->toString();
 	md5->reset();
@@ -170,7 +159,6 @@ SceneNode* ResourceLoader::LoadMesh(std::string name, std::string path)
 // --------------------------------------------------------------------------------------------
 SceneNode* ResourceLoader::GetMesh(std::string name)
 {
-	//	unsigned int id = SID(name);
 	md5->update(name);
 	string id = md5->toString();
 	md5->reset();

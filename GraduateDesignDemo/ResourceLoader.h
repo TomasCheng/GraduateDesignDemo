@@ -22,16 +22,13 @@ public:
 	static void Init();
 	static void Clean();
 
-	// shader resources
 	static Shader*      LoadShader(std::string name, std::string vsPath = "DefaultVertShader.vert", std::string fsPath = "DefaultFragShader.frag", std::vector<std::string> defines = std::vector<std::string>());
 	static Shader*      GetShader(std::string name);
-	// texture resources
 	static Texture*     LoadTexture(std::string name, std::string path, GLenum target = GL_TEXTURE_2D, GLenum format = GL_RGBA, bool srgb = false);
 	static Texture*     LoadHDR(std::string name, std::string path);
 	static TextureCube* LoadTextureCube(std::string name, std::string folder);
 	static Texture*     GetTexture(std::string name);
 	static TextureCube* GetTextureCube(std::string name);
-	// mesh/scene resources
 	static SceneNode*  LoadMesh(std::string name, std::string path);
 	static SceneNode*  GetMesh(std::string name);
 

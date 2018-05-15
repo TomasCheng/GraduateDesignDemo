@@ -20,11 +20,10 @@ Circle::Circle(unsigned int edgeSegments, unsigned int ringSegments)
 			Positions.push_back(glm::vec3(xPos * ringDepth, yPos * ringDepth, 0.0f));
 		}
 	}
-	// indices are exactly the same as for the plane, only the positions differ for a circle
 	bool oddRow = false;
 	for (int y = 0; y < ringSegments; ++y)
 	{
-		if (!oddRow) // NOTE(Joey): even rows: y == 0, y == 2; and so on
+		if (!oddRow) //  even rows: y == 0, y == 2; and so on
 		{
 			for (int x = 0; x <= edgeSegments; ++x)
 			{

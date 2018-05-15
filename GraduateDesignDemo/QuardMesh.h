@@ -5,6 +5,6 @@ class Quad : public Mesh
 {
 public:
 
-	Quad(); // defaults to dimensions (1, 1)
+	Quad();
 	Quad(float width, float height);
 };

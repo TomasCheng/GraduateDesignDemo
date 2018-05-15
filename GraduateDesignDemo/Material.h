@@ -17,7 +17,6 @@ enum MaterialType
 class Material
 {
 private:
-	// shader state
 	Shader * m_Shader;
 	std::map<std::string, UniformValue>        m_Uniforms;
 	std::map<std::string, UniformValueSampler> m_SamplerUniforms;
@@ -28,23 +27,19 @@ public:
 	MaterialType Type = MATERIAL_CUSTOM;
 	glm::vec4 Color = glm::vec4(1.0f);
 
-	// depth state
 	bool   DepthTest = true;
 	bool   DepthWrite = true;
 	GLenum DepthCompare = GL_LESS;
 
-	// face culling state
 	bool   Cull = true;
 	GLenum CullFace = GL_BACK;
 	GLenum CullWindingOrder = GL_CCW;
 
-	// blending state
 	bool   Blend = false;
-	GLenum BlendSrc = GL_ONE; // pre-multiplied alpha
+	GLenum BlendSrc = GL_ONE; //
 	GLenum BlendDst = GL_ONE_MINUS_SRC_ALPHA;
 	GLenum BlendEquation = GL_FUNC_ADD;
 
-	// shadow state
 	bool ShadowCast = true;
 	bool ShadowReceive = true;
 

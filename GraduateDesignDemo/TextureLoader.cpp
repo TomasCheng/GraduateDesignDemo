@@ -15,7 +15,6 @@ Texture TextureLoader::LoadTexture(std::string path, GLenum target, GLenum inter
 	if (texture.InternalFormat == GL_RGBA || texture.InternalFormat == GL_SRGB_ALPHA)
 		texture.InternalFormat = srgb ? GL_SRGB_ALPHA : GL_RGBA;
 
-	// flip textures on their y coordinate while loading
 	stbi_set_flip_vertically_on_load(true);
 
 	int width, height, nrComponents;
@@ -93,7 +92,6 @@ TextureCube TextureLoader::LoadTextureCube(std::string top, std::string bottom, 
 {
 	TextureCube texture;
 
-	// disable y flip on cubemaps
 	stbi_set_flip_vertically_on_load(false);
 
 	std::vector<std::string> faces = { top, bottom, left, right, front, back };
