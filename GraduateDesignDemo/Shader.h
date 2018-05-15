@@ -1,26 +1,48 @@
 #pragma once
 
-#include <glad/glad.h>; // 包含glad来获取所有的必须OpenGL头文件
-
 #include <string>
-#include <fstream>
-#include <sstream>
-#include <iostream>
-
+#include <vector>
+#include "ShaderTypes.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include "glad/glad.h" // 包含glad来获取所有的必须OpenGL头文件
 
 class Shader
 {
 public:
-	// 程序ID
 	unsigned int ID;
+	std::string  Name;
 
-	// 构造器读取并构建着色器
-	Shader(const GLchar* vertexPath, const GLchar* fragmentPath);
-	// 使用/激活程序
-	void use();
-	// uniform工具函数
-	void setBool(const std::string &name, bool value) const;
-	void setInt(const std::string &name, int value) const;
-	void setFloat(const std::string &name, float value) const;
+	std::vector<Uniform>         Uniforms;
+	std::vector<VertexAttribute> Attributes;
+
+public:
+	Shader();
+	Shader(std::string name, std::string vsCode, std::string fsCode, std::vector<std::string> defines = std::vector<std::string>());
+
+	void Load(std::string name, std::string vsCode, std::string fsCode, std::vector<std::string> defines = std::vector<std::string>());
+
+	void Use();
+
+	bool HasUniform(std::string name);
+
+	void SetInt(std::string location, int   value);
+	void SetBool(std::string location, bool  value);
+	void SetFloat(std::string location, float value);
+	void SetVector(std::string location, glm::vec2  value);
+	void SetVector(std::string location, glm::vec3  value);
+	void SetVector(std::string location, glm::vec4  value);
+	void SetVectorArray(std::string location, int size, const std::vector<glm::vec2>& values);
+	void SetVectorArray(std::string location, int size, const std::vector<glm::vec3>& values);
+	void SetVectorArray(std::string location, int size, const std::vector<glm::vec4>& values);
+	void SetMatrix(std::string location, glm::mat2 value);
+	void SetMatrix(std::string location, glm::mat3 value);
+	void SetMatrix(std::string location, glm::mat4 value);
+	void SetMatrixArray(std::string location, int size, glm::mat2* values);
+	void SetMatrixArray(std::string location, int size, glm::mat3* values);
+	void SetMatrixArray(std::string location, int size, glm::mat4* values);
+private:
+
+	int getUniformLocation(std::string name);
 };
-

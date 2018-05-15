@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\Y_Study\My\2018GraduateDesign\Lib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\Y_Study\My\2018GraduateDesign\Lib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Lib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Lib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -81,7 +81,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc140-mt.lib;freetype.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -122,16 +122,93 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\My\2018GraduateDesign\OpenGLTool\glad\src\glad.c" />
+    <ClCompile Include="CircleMesh.cpp" />
+    <ClCompile Include="CubeMesh.cpp" />
+    <ClCompile Include="Floor.cpp" />
+    <ClCompile Include="Grass.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MD5.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshLoader.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="PlaneMesh.cpp" />
+    <ClCompile Include="QuardMesh.cpp" />
+    <ClCompile Include="ResourceLoader.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneNode.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="ShaderLoader.cpp" />
+    <ClCompile Include="SphereMesh.cpp" />
+    <ClCompile Include="stb_image_define.cpp" />
+    <ClCompile Include="TextRender.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureCube.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
+    <ClCompile Include="Torus.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="CircleMesh.h" />
+    <ClInclude Include="CubeMap.h" />
+    <ClInclude Include="CubeMesh.h" />
+    <ClInclude Include="DirectionalLight.h" />
+    <ClInclude Include="Floor.h" />
+    <ClInclude Include="Grass.h" />
+    <ClInclude Include="Logger.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="Math.h" />
+    <ClInclude Include="MD5.h" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshLoader.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="PlaneMesh.h" />
+    <ClInclude Include="PointLight.h" />
+    <ClInclude Include="QuardMesh.h" />
+    <ClInclude Include="ResourceLoader.h" />
+    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneNode.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderLoader.h" />
+    <ClInclude Include="ShaderTypes.h" />
+    <ClInclude Include="SphereMesh.h" />
+    <ClInclude Include="SpotLight.h" />
+    <ClInclude Include="stb_image.h" />
+    <ClInclude Include="TextRender.h" />
+    <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureCube.h" />
+    <ClInclude Include="TextureLoader.h" />
+    <ClInclude Include="Torus.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="Shader.fs" />
-    <None Include="Shader.vs" />
+    <None Include="Commom.glsl" />
+    <None Include="cubeMapShader.frag" />
+    <None Include="cubeMapShader.vert" />
+    <None Include="DefaultFragShader.frag" />
+    <None Include="DefaultVertShader.vert" />
+    <None Include="GrassShader.frag" />
+    <None Include="Light.frag" />
+    <None Include="ModelShader.frag" />
+    <None Include="ModelShader.vert" />
+    <None Include="RTTShader.frag" />
+    <None Include="RTTShader.vert" />
+    <None Include="ScreenEffectNormal.frag" />
+    <None Include="ScreenEffectNormal.vert" />
+    <None Include="Shader.frag" />
+    <None Include="Shader.vert" />
+    <None Include="TextShader.frag" />
+    <None Include="TextShader.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="container.jpg" />
+    <Image Include="container2.jpg" />
+    <Image Include="container2_specular.jpg" />
+    <Image Include="face.jpg" />
+    <Image Include="grass.png" />
+    <Image Include="matrix.jpg" />
+    <Image Include="wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
