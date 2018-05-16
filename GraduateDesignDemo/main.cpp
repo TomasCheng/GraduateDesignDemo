@@ -359,7 +359,7 @@ int main()
 	TextRender::Init(WIDTH, HEIGHT);
 
 	//²¥·ÅÉùÒô
-//	Scene::SoundPlayer->play2D("ophelia.mp3", true);
+	Scene::SoundPlayer->play2D("ophelia.mp3", true);
 
 	DirectionalLight* directional_light = new DirectionalLight();
 	directional_light->Color = glm::vec3(1.0);
@@ -451,9 +451,9 @@ int main()
 		//	n5->SetPosition(glm::vec3(-300, 0, 0));
 		//	n5->SetScale(0.1f);
 
-			//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
-			//	n4->SetPosition(glm::vec3(0, 0, 4));
-				//	Scene::AddChild(n2);
+//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
+//	n4->SetPosition(glm::vec3(0, 0, 4));
+	//	Scene::AddChild(n2);
 
 	for (int i = 0; i < 10; i++)
 	{
