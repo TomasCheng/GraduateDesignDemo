@@ -93,7 +93,7 @@ void main()
 
 			FragColor = vec4(col, 1.0);
 		
-		}else{
+		}else if(type==3){
 			float kernel[9] = float[](
 			-1, -1, -1,
 			-1,  9, -1,
@@ -109,8 +109,20 @@ void main()
 				col += sampleTex[i] * kernel[i];
 
 			FragColor = vec4(col, 1.0);
-			
-			
+		}else if(type ==4){
+		
+			//反向
+			FragColor = vec4(vec3(1.0f - vec.rgb),1.0f);
+
+		
+
+		}else if(type ==5){
+			//灰度
+			//float avg = (vec.r+vec.g+vec.b)/3.0f;
+			//FragColor = vec4(vec3(avg),1.0f);
+			//加权灰度
+			float avg =  0.2126 * vec.r + 0.7152 * vec.g + 0.0722 * vec.b;
+			FragColor = vec4(vec3(avg),1.0f);
 		
 		}
 //		//核效果

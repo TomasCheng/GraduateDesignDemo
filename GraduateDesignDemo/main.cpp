@@ -28,7 +28,8 @@
 #include "Math.h"
 using namespace std;
 
-const GLuint WIDTH = 1080, HEIGHT = 1080;
+//const GLuint WIDTH = 1080, HEIGHT = 1080;
+const GLuint WIDTH = 1024, HEIGHT = 1024;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 GLuint loadTexture(string fileName, GLint REPEAT, GLint FILTER);
@@ -359,7 +360,7 @@ int main()
 	TextRender::Init(WIDTH, HEIGHT);
 
 	//播放声音
-	Scene::SoundPlayer->play2D("ophelia.mp3", true);
+	Scene::SoundPlayer->play2D("nice.mp3", true);
 
 	DirectionalLight* directional_light = new DirectionalLight();
 	directional_light->Color = glm::vec3(1.0);
@@ -409,20 +410,20 @@ int main()
 	n1->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
 	n1->SetScale(glm::vec3(65, 1, 65));
 
-	Shader* s2 = ResourceLoader::LoadShader("wall");
-	Material* m2 = new Material(s2);
-	//	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
-	Texture* t2 = ResourceLoader::LoadTexture("wall", "chess.jpg");
-	m2->SetTexture("TexAlbedo", t2, 0);
-	//	m1->SetTexture("TexMetallic", t1, 2);
-	m2->SetVector("MainColor", glm::vec3(1.0));
-	Mesh* mesh2 = new Plane(1, 1);
-	SceneNode* n2 = new SceneNode(mesh2, m2);
-	n2->SetPosition(glm::vec3(0, 30, -60));
-	//	n2->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
-	n2->SetScale(glm::vec3(65, 65, 65));
+	//	Shader* s2 = ResourceLoader::LoadShader("wall");
+	//	Material* m2 = new Material(s2);
+	//	//	Texture* t1 = ResourceLoader::LoadTexture("floor", "mesh/robo/textures/rcs-naofield.png");
+	//	Texture* t2 = ResourceLoader::LoadTexture("wall", "chess.jpg");
+	//	m2->SetTexture("TexAlbedo", t2, 0);
+	//	//	m1->SetTexture("TexMetallic", t1, 2);
+	//	m2->SetVector("MainColor", glm::vec3(1.0));
+	//	Mesh* mesh2 = new Plane(1, 1);
+	//	SceneNode* n2 = new SceneNode(mesh2, m2);
+	//	n2->SetPosition(glm::vec3(0, 30, -60));
+	//	//	n2->SetRotation(glm::vec4(1, 0, 0, glm::radians(90.0f)));
+	//	n2->SetScale(glm::vec3(65, 65, 65));
 
-	//中间一个箱子
+		//中间一个箱子
 	Shader* s3 = ResourceLoader::LoadShader("cube");
 	Material* m3 = new Material(s3);
 	Texture* t31 = ResourceLoader::LoadTexture("cube1", "container2.jpg");
@@ -447,13 +448,13 @@ int main()
 	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/nanosuit/nanosuit.obj");
 	//	n4->SetPosition(glm::vec3(0, 0, -5));
 
-		//	SceneNode * n5 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
-		//	n5->SetPosition(glm::vec3(-300, 0, 0));
-		//	n5->SetScale(0.1f);
+//	SceneNode * n5 = ResourceLoader::LoadMesh("sponza", "mesh/sponza/sponza.obj");
+//	n5->SetPosition(glm::vec3(-300, 0, 0));
+//	n5->SetScale(0.1f);
 
-//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
-//	n4->SetPosition(glm::vec3(0, 0, 4));
-	//	Scene::AddChild(n2);
+	//	SceneNode * n4 = ResourceLoader::LoadMesh("Model", "mesh/robo/models/naobody.obj");
+	//	n4->SetPosition(glm::vec3(0, 0, 4));
+		//	Scene::AddChild(n2);
 
 	for (int i = 0; i < 10; i++)
 	{
@@ -656,6 +657,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	else if (key == GLFW_KEY_F4 && action == GLFW_PRESS)
 	{
 		screenMat->SetInt("type", 3);
+	}
+	else if (key == GLFW_KEY_F5 && action == GLFW_PRESS)
+	{
+		screenMat->SetInt("type", 4);
+	}
+	else if (key == GLFW_KEY_F6 && action == GLFW_PRESS)
+	{
+		screenMat->SetInt("type", 5);
 	}
 	else if (key == GLFW_KEY_O && action == GLFW_PRESS)
 	{

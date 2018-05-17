@@ -19,6 +19,7 @@ Quad::Quad()
 	{ 1.0f, 0.0f, },
 	};
 	Topology = TRIANGLE_STRIP;
+	//	Topology = TRIANGLES;
 
 	Finalize();
 }

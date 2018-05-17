@@ -134,7 +134,7 @@ void Init()
 {
 	for(int i=0;i<dirLightCount;i++){
 		dirLights[i].direction = dirLightDir[i];
-		dirLights[i].diffuse = dirLightCol[i] * 0.6;
+		dirLights[i].diffuse = dirLightCol[i] * 0.9;
 		dirLights[i].ambient = dirLights[i].diffuse * (0.2);
 
 		dirLights[i].specular = vec3(0.3);
@@ -144,7 +144,7 @@ void Init()
 	{
 		pointLights[i].position = pointLightPos[i];
 		pointLights[i].radius = pointLightRadius[i];
-		pointLights[i].diffuse = pointLightCol[i] * 0.6;
+		pointLights[i].diffuse = pointLightCol[i] * 0.9;
 		pointLights[i].ambient = pointLights[i].diffuse * (0.2);
 
 		pointLights[i].specular = vec3(0.5);
