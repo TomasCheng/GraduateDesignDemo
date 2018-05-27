@@ -136,8 +136,11 @@ Mesh* MeshLoader::parseMesh(aiMesh* aMesh, const aiScene* aScene, glm::vec3& out
 	for (unsigned int i = 0; i < aMesh->mNumVertices; ++i)
 	{
 		positions[i] = glm::vec3(aMesh->mVertices[i].x, aMesh->mVertices[i].y, aMesh->mVertices[i].z);
-		normals[i] = glm::vec3(aMesh->mNormals[i].x, aMesh->mNormals[i].y, aMesh->mNormals[i].z);
-		if (aMesh->mTextureCoords[0])
+		if (aMesh->mNormals)
+		{
+			normals[i] = glm::vec3(aMesh->mNormals[i].x, aMesh->mNormals[i].y, aMesh->mNormals[i].z);
+		}
+		if (aMesh->mTextureCoords)
 		{
 			uv[i] = glm::vec2(aMesh->mTextureCoords[0][i].x, aMesh->mTextureCoords[0][i].y);
 		}

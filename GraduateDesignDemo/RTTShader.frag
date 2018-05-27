@@ -9,6 +9,8 @@ in vec2 TexCoords;
 
 uniform sampler2D screenTexture;
 
+uniform sampler2D bumpTex;
+
 uniform int type;
 
 
@@ -109,6 +111,7 @@ void main()
 				col += sampleTex[i] * kernel[i];
 
 			FragColor = vec4(col, 1.0);
+
 		}else if(type ==4){
 		
 			//反向
@@ -123,6 +126,36 @@ void main()
 			//加权灰度
 			float avg =  0.2126 * vec.r + 0.7152 * vec.g + 0.0722 * vec.b;
 			FragColor = vec4(vec3(avg),1.0f);
+		
+		}
+		else if(type ==6){
+			float kernel[9] = float[](
+			-6, -3, 0,
+			-3,  1, 3,
+			0, 3, 6
+			);
+			vec3 sampleTex[9];
+			for(int i = 0; i < 9; i++)
+			{
+				sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
+			}
+			vec3 col = vec3(0.0);
+			for(int i = 0; i < 9; i++)
+				col += sampleTex[i] * kernel[i];
+
+			FragColor = vec4(col, 1.0);
+
+		
+		}
+		else if(type ==7){
+			//碎屏特效
+			//vec2 bumpC = TexCoords - vec2(0.5);
+
+			vec4 bump = texture(bumpTex,TexCoords);
+			vec2 newCoords = bump.xy * 0.5 + TexCoords;
+			vec4 v = texture(screenTexture, vec2(newCoords.x,newCoords.y));
+			FragColor = vec4(v.rgb,1.0f);
+
 		
 		}
 //		//核效果
